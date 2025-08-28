@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /txt Skins/skinList.txt
+Allow: * 
+Sitemap: https://gloobix-io.onrender.com/sitemap.xml

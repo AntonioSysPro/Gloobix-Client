@@ -1,0 +1,66 @@
+[
+  {
+    "id": "ffa",
+    "name": "FFA",
+    "path": "/",
+    "wsPath": "/socket",
+    "hintPort": 443,
+    "url": "wss://gloobix-ffa.onrender.com:443"
+  },
+  {
+    "id": "teams",
+    "name": "Teams",
+    "path": "/",
+    "wsPath": "/socket",
+    "hintPort": 443,
+    "url": "wss://gloobix-teams.onrender.com:443"
+  },
+  {
+    "id": "selfeed",
+    "name": "Selfeed",
+    "path": "/",
+    "wsPath": "/socket",
+    "hintPort": 443,
+    "url": "wss://gloobix-selfeed.onrender.com:443"
+  },
+  {
+    "id": "experimental",
+    "name": "Experimental",
+    "path": "/",
+    "wsPath": "/socket",
+    "hintPort": 443,
+    "url": "wss://gloobix-experimental.onrender.com:443"
+  },
+  {
+    "id": "megasplit",
+    "name": "Mega Split",
+    "path": "/",
+    "wsPath": "/socket",
+    "hintPort": 443,
+    "url": "wss://gloobix-megasplit.onrender.com:443"
+  },
+  {
+    "id": "ghost",
+    "name": "Ghost",
+    "path": "/",
+    "wsPath": "/socket",
+    "hintPort": 443,
+    "url": "wss://gloobix-ghost.onrender.com:443"
+  },
+  {
+    "id": "minions",
+    "name": "Minions",
+    "path": "/",
+    "wsPath": "/socket",
+    "hintPort": 443,
+    "url": "wss://gloobix-minions.onrender.com:443"
+  },
+  {
+    "id": "imvirus",
+    "name": "Imvirus",
+    "path": "/",
+    "wsPath": "/socket",
+    "hintPort": 443,
+    "url": "wss://gloobix-imvirus.onrender.com:443"
+  }
+]

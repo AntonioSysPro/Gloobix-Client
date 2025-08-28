@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description"
+        content="Juega Gloobix.io, el emocionante juego multijugador tipo Agar.io donde controlas una célula y absorbes a los demás para crecer. ¡Gratis, rápido y sin descargas!">
+    <meta name="keywords"
+        content="agario, agar, io, cell, cells, virus, bacteria, blob, game, games, web game, html5, fun, flash, gloobix.io, gloobix, juego gloobix, agar.io clone, juego tipo agar.io, blob game, juego multijugador online, io game, juego de células, cell eater, web game, juego de navegador, html5 game, multiplayer io game, juego divertido, agario estilo, juego gratuito en línea, antoniosyspro, gloobix, juego colombiano, grow and eat game, juego con amigos, slither.io, cytos.io, gloobix.io">
+    <meta name="viewport"
+        content="minimal-ui, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>GLOOBIX.IO WEB - Juego multijugador tipo Agar.io gratis y online</title>
+    <link id="favicon" rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:700" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/index.css" rel="stylesheet">
+    <link href="assets/css/joystick.css" rel="stylesheet">
+    <link href="assets/css/gallery.css" rel="stylesheet">
+    <link href="assets/css/exp.css" rel="stylesheet">
+    <link href="assets/css/gamemodes.css" rel="stylesheet">
+    <link href="assets/css/menu.css" rel="stylesheet">
+    <link href="assets/css/recording.css" rel="stylesheet">
+    <link href="assets/css/recordings.css" rel="stylesheet">
+    <script src="../js/jquery.min.js"></script>
+
+    <script src="assets/js/quadtree.js"></script>
+    <!-- Firebase debe inicializarse antes de cualquier uso -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore-compat.js"></script>
+    <!-- Firebase client configuration and user service -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/userService.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/main_out.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="assets/js/blocker.js"></script>
+    <script src="assets/js/gamechat.js"></script>
+    <script src="assets/js/initial_setup.js"></script>
+    <script src="assets/js/modes-client.js"></script>
+    <script>
+        // Optional: point this to a remote modes service (JSON array) hosted on Render.
+        // Example: window.MODES_SERVICE_URL = 'https://my-render-service.onrender.com/modes'
+        // Optionally provide a MODE API KEY for protected endpoints:
+        // window.MODES_SERVICE_KEY = 'my-secret-key';
+        // When set, the client will prefer that list over local config/modes.json
+        window.MODES_SERVICE_URL = window.MODES_SERVICE_URL || null;
+        window.MODES_SERVICE_KEY = window.MODES_SERVICE_KEY || null;
+
+        // Convenience wrapper: if page code calls setserver('localhost:443') or similar,
+        // remap it to the production Render host. Edit RENDER_SERVER_OVERRIDE to change target.
+        ( function ()
+        {
+            // Use a full wss URL with the socket path so browsers connect over 443 (wss).
+            // Ensure your game server is reachable at this host and path (TLS enabled).
+            const RENDER_SERVER_OVERRIDE = "https:" == window.location.protocol ? 'gloobix-io.onrender.com:443' : 'localhost:443';
+            function installWrapper ()
+            {
+                if ( typeof window.setserver !== 'function' ) return false;
+                const _orig = window.setserver.bind( window );
+                window.setserver = function ( arg )
+                {
+                    if ( !arg ) return _orig( arg );
+                    // Normalize common localhost patterns
+                    if ( arg === 'localhost:443' || arg === '127.0.0.1:443' || arg === 'localhost' )
+                    {
+                        return _orig( RENDER_SERVER_OVERRIDE );
+                    }
+                    return _orig( arg );
+                };
+                return true;
+            }
+            // Try to install immediately; if setserver is defined later, install on DOMContentLoaded
+            if ( !installWrapper() ) document.addEventListener( 'DOMContentLoaded', installWrapper );
+        } )();
+        if ( typeof BlockAdBlock !== typeof undefined )
+
+            function cleanSelect ( x )
+            {
+                document.getElementById( "selectedGamemode1" ).classList.remove( 'selectedGamemode' );
+                document.getElementById( "selectedGamemode2" ).classList.remove( 'selectedGamemode' );
+                document.getElementById( "selectedGamemode3" ).classList.remove( 'selectedGamemode' );
+                document.getElementById( "selectedGamemode4" ).classList.remove( 'selectedGamemode' );
+                document.getElementById( "selectedGamemode5" ).classList.remove( 'selectedGamemode' );
+                document.getElementById( "selectedGamemode6" ).classList.remove( 'selectedGamemode' );
+                document.getElementById( "selectedGamemode7" ).classList.remove( 'selectedGamemode' );
+                document.getElementById( "selectedGamemode8" ).classList.remove( 'selectedGamemode' );
+                document.getElementById( "selectedGamemode9" ).classList.remove( 'selectedGamemode' );
+                document.getElementById( "selectedGamemode10" ).classList.remove( 'selectedGamemode' );
+                document.getElementById( "selectedGamemode11" ).classList.remove( 'selectedGamemode' );
+                document.getElementById( "selectedGamemode12" ).classList.remove( 'selectedGamemode' );
+                if ( x )
+                {
+                    document.getElementById( x ).classList.remove( 'selectedGamemode' );
+                    if ( window.gloObix.lastgamemode !== null ) document.getElementById( window.gloObix.lastgamemode ).classList.remove( 'selectedGamemode' );
+                }
+            }
+
+        // Replace many inline setserver('localhost:...') onclicks by calling selectModeById
+        // This keeps markup untouched and centralizes connection logic to the modes service.
+        document.addEventListener( 'DOMContentLoaded', function ()
+        {
+            try
+            {
+                const mapping = {
+                    selectedGamemode1: 'ffa',
+                    selectedGamemode2: 'teams',
+                    selectedGamemode3: 'selfeed',
+                    selectedGamemode4: 'experimental',
+                    selectedGamemode5: 'megasplit',
+                    selectedGamemode6: 'ghost',
+                    selectedGamemode7: 'minions',
+                    selectedGamemode8: 'imvirus',
+                    // add more mappings here if you create modes in the modes service
+                };
+                Object.keys( mapping ).forEach( id =>
+                {
+                    const el = document.getElementById( id );
+                    if ( !el ) return;
+                    // remove inline onclick to avoid duplicate setserver calls
+                    el.removeAttribute( 'onclick' );
+                    el.addEventListener( 'click', function ( evt )
+                    {
+                        evt.stopPropagation();
+                        try { window.selectModeById( mapping[ id ] ); } catch ( e ) { console.warn( 'selectModeById missing', e ); }
+                        try { cleanSelect(); } catch ( e ) { }
+                        this.classList.add( 'selectedGamemode' );
+                    } );
+                } );
+            } catch ( e ) { console.warn( 'gamemode mapping init failed', e ); }
+        } );
+
+        function executeEventFunctions ()
+        {
+            console.log( 'No event scheduled' );
+        }
+    </script>
+    <script>
+        function toggleFullScreen ()
+        {
+            try
+            {
+                if ( !document.fullscreenElement )
+                {
+                    if ( document.documentElement.requestFullscreen )
+                    {
+                        document.documentElement.requestFullscreen();
+                    } else if ( document.documentElement.mozRequestFullScreen )
+                    {
+                        document.documentElement.mozRequestFullScreen();
+                    } else if ( document.documentElement.webkitRequestFullscreen )
+                    {
+                        document.documentElement.webkitRequestFullscreen();
+                    } else if ( document.documentElement.msRequestFullscreen )
+                    {
+                        document.documentElement.msRequestFullscreen();
+                    }
+                } else
+                {
+                    if ( document.exitFullscreen )
+                    {
+                        document.exitFullscreen();
+                    } else if ( document.mozCancelFullScreen )
+                    {
+                        document.mozCancelFullScreen();
+                    } else if ( document.webkitExitFullscreen )
+                    {
+                        document.webkitExitFullscreen();
+                    } else if ( document.msExitFullscreen )
+                    {
+                        document.msExitFullscreen();
+                    }
+                }
+            } catch ( e )
+            {
+                console.warn( "Error toggling fullscreen:", e );
+            }
+        }
+
+    </script>
+    <script>
+        function updateCountdown ()
+        {
+            const targetDate = new Date( "2025-08-11T20:57:00" );
+            const now = new Date();
+
+            const diff = targetDate - now;
+
+            if ( diff <= 0 )
+            {
+                document.getElementById( "seasonal_gamemode_countdown" ).textContent = "Season ended.";
+                return;
+            }
+
+            const days = Math.floor( diff / ( 1000 * 60 * 60 * 24 ) );
+            const hours = Math.floor( ( diff / ( 1000 * 60 * 60 ) ) % 24 );
+
+            document.getElementById( "seasonal_gamemode_countdown" ).textContent =
+                `⌛${ days }d ${ hours }h`;
+        }
+        /*document.ready( function ()
+        {
+            updateCountdown()
+            var d = new Date();
+            var n = d.getDate();
+            var completedAlready = localStorage.getItem( 'questsProgress' );
+            if ( !localStorage.getItem( 'questsProgress' ) ) return localStorage.setItem( 'questsProgress', JSON.stringify( [ 0 ] ) );
+            completedAlready = JSON.parse( completedAlready );
+
+            for ( var i = 1; i <= n; i++ )
+            {
+                $( '.day-' + i ).addClass( 'flip' );
+            }
+
+            for ( let index = 0, len = completedAlready.length; index < len; ++index )
+            {
+                const element = completedAlready[ index ];
+                // console.log(element)
+                $( '.front-' + element ).addClass( 'UnlockedYet' );
+                // console.log('.front-' + element)
+                $( '.day-' + element ).removeClass( 'flip' );
+            }
+
+            for ( var i = n + 1; i <= 24; i++ )
+            {
+                $( '.front-' + i ).addClass( 'notUnlockedYet' );
+            }
+        } );*/
+    </script>
+
+    <script>
+        var blockAdBlock = false;
+    </script>
+    <script>
+        var aiptag = aiptag || {};
+        aiptag.cmd = aiptag.cmd || [];
+        aiptag.cmd.display = aiptag.cmd.display || [];
+        aiptag.cmd.player = aiptag.cmd.player || [];
+
+        //CMP tool settings
+        aiptag.cmp = {
+            show: true,
+            position: "centered", //centered or bottom
+            button: true,
+            buttonText: "Privacy settings",
+            buttonPosition: "bottom-left", //bottom-left, bottom-right, top-left, top-right
+        };
+    </script>
+</head>
+
+<body onload="updateCurrentSkinDisplay()">
+
+
+    <canvas id="canvas" class="chat-style"></canvas>
+    <input type="text" id="chat_textbox" placeholder="Press enter to chat" maxlength="50">
+    <div style="font-family:'Ubuntu'">&nbsp;</div>
+
+    <script>
+        document.addEventListener( 'DOMContentLoaded', function ()
+        {
+            var canvas = document.getElementById( 'canvas' );
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            window.addEventListener( 'resize', function ()
+            {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            } );
+            // legacy: set default server host:port used by the game logic
+            setserver( "https:" == window.location.protocol ? 'gloobix-io.onrender.com:443' : 'localhost:443' );
+        } );
+    </script>
+
+
+
+
+
+    <div id="gallery" onclick="if (event.target == this) this.hide()" style="display: none;">
+        <div id="gallery-content">
+            <div id="gallery-header">Free Skins - Gallery</div>
+            <button id="gallery-youtubers" class="youtuberSkinsBtn-gallery" onclick="showYoutuberSkins()">Youtuber
+                Skins
+                - Gallery</button>
+            <div id="gallery-body"></div>
+        </div>
+    </div>
+    <div id="gallery-yt" onclick="if (event.target == this) this.hide()" style="display: none;">
+        <div id="gallery-yt-content">
+            <div id="gallery-yt-header">Youtuber Skins</div>
+            <div id="gallery-yt-body"></div>
+        </div>
+    </div>
+
+    <div id="settings-window" onclick="if (event.target == this) this.hide()"
+        style="transition: opacity 0.5s ease 0s; opacity: 0; display: none">
+        <div id="settings-window-content">
+            <div id="settings-window-header">Gloobix Web Settings</div>
+            <div id="settings-window-body" class="scrollable">
+                <div>
+                    <label class="control control-checkbox">Jelly Physics<input id="jellyPhysics" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Enable Sounds<input id="playSounds" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Enable Full Screen<input id="fullScreen" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show skins<input id="showSkins" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Names<input id="showNames" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Chat<input id="showChat" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Minimap<input id="showMinimap" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Enable Zoomout<input id="moreZoom" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Disable Auto Zoom<input id="disableAutoZoom"
+                            type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Dark Theme<input id="darkTheme" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Leaderboard<input id="showLeaderboard" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Colors<input id="showColor" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Mass<input id="showMass" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Short Mass (k)<input id="showShortMass" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Minimap Sectors<input id="showMinimapSectors"
+                            type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Nickname on Minimap<input id="showMinimapNickname"
+                            type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Position<input id="showPosition" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show FPS<input id="showFPS" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Cell Count<input id="showCellCounter" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Ping<input id="showPing" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Borders<input id="showBorder" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Show Grid<input id="showGrid" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Menu Sounds<input id="menuSounds" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Fill Skins<input id="fillSkin" type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Background Sectors<input id="backgroundSectors"
+                            type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">Confirmation Before Leaving<input id="askBeforeLeaving"
+                            type="checkbox">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <center><span id="nameDistance">Draw Names Distance</span></center>
+                    <input id="drawNamesDistance" type="range" value="2400" step="1" min="1" max="2400"
+                        style="width: 100%; height: 30px" onchange="setDrawNameDistance($(this).val());"><br>
+                    <!-- <center><span id="borderDistance">Draw Borders Distance</span></center>
+                    <input id="drawBorderDistance" type="range" value="120" step="1" min="1" max="240" style="width: 100%; height: 30px" onchange="setDrawBorderDistance($(this).val());" /><br /> -->
+                    <div id="logout_div" class="center" style="display: none;">
+                        <p>Logout from your GloObix Account?</p>
+                        <button id="gloobixUserLogout" class="gloobixAccountLogout centered">Logout</button>
+                    </div>
+                    <!-- \/\/\/ disabled stuff \/\/\/-->
+                    <input type="text" class="" placeholder="" id="uuid" style="display: none;" disabled="">
+                    <input type="text" class="" placeholder="" id="account" style="display: none;" disabled="">
+                    <br>
+                </div>
+                <div id="keyBindList">
+                    <div class="gloObixSettingList">
+                        <p id="macroFeed-key" class="gloObixFirstRowKey">w</p>
+                        <p id="macroFeed-name" class="gloObixSecondRowKey">macroFeed</p><button id="macroFeed-button"
+                            class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="doubleSplit-key" class="gloObixFirstRowKey">d</p>
+                        <p id="doubleSplit-name" class="gloObixSecondRowKey">doubleSplit</p><button
+                            id="doubleSplit-button" class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="tripleSplit-key" class="gloObixFirstRowKey">t</p>
+                        <p id="tripleSplit-name" class="gloObixSecondRowKey">tripleSplit</p><button
+                            id="tripleSplit-button" class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="quadSplit-key" class="gloObixFirstRowKey">shift</p>
+                        <p id="quadSplit-name" class="gloObixSecondRowKey">quadSplit</p><button id="quadSplit-button"
+                            class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="maxSplit-key" class="gloObixFirstRowKey">m</p>
+                        <p id="maxSplit-name" class="gloObixSecondRowKey">maxSplit</p><button id="maxSplit-button"
+                            class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="split-key" class="gloObixFirstRowKey"> </p>
+                        <p id="split-name" class="gloObixSecondRowKey">split</p><button id="split-button"
+                            class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="minionSplit-key" class="gloObixFirstRowKey">e</p>
+                        <p id="minionSplit-name" class="gloObixSecondRowKey">minionSplit</p><button
+                            id="minionSplit-button" class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="minionFeed-key" class="gloObixFirstRowKey">r</p>
+                        <p id="minionFeed-name" class="gloObixSecondRowKey">minionFeed</p><button id="minionFeed-button"
+                            class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="minionStop-key" class="gloObixFirstRowKey">t</p>
+                        <p id="minionStop-name" class="gloObixSecondRowKey">minionStop</p><button id="minionStop-button"
+                            class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="minionDouble-key" class="gloObixFirstRowKey">c</p>
+                        <p id="minionDouble-name" class="gloObixSecondRowKey">minionDouble</p><button
+                            id="minionDouble-button" class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="minionTriple-key" class="gloObixFirstRowKey">v</p>
+                        <p id="minionTriple-name" class="gloObixSecondRowKey">minionTriple</p><button
+                            id="minionTriple-button" class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="minionQuad-key" class="gloObixFirstRowKey">x</p>
+                        <p id="minionQuad-name" class="gloObixSecondRowKey">minionQuad</p><button id="minionQuad-button"
+                            class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="minionMax-key" class="gloObixFirstRowKey">b</p>
+                        <p id="minionMax-name" class="gloObixSecondRowKey">minionMax</p><button id="minionMax-button"
+                            class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="gloObixSettingList">
+                        <p id="switchPlayer-key" class="gloObixFirstRowKey">tab</p>
+                        <p id="switchPlayer-name" class="gloObixSecondRowKey">switchPlayer</p><button
+                            id="switchPlayer-button" class="gloObixChangeButton">change</button>
+                    </div>
+                    <div class="mouseSettingsEditor">
+                        <h2>Mouse Settings</h2>
+                        <label for="leftMouseBtn">LMB:</label>
+                        <select id="leftMouseBtn" class="mouseKeybindDropdown">
+                            <option value="" id="_left" selected="selected"></option>
+                            <option value="doubleSplit" id="doubleSplit_left">doubleSplit</option>
+                            <option value="tripleSplit" id="tripleSplit_left">tripleSplit</option>
+                            <option value="quadSplit" id="quadSplit_left">quadSplit</option>
+                            <option value="split" id="split_left">split</option>
+                            <option value="minionSplit" id="minionSplit_left">minionSplit</option>
+                            <option value="minionStop" id="minionStop_left">minionStop</option>
+                            <option value="minionDouble" id="minionDouble_left">minionDouble</option>
+                            <option value="minionQuad" id="minionQuad_left">minionQuad</option>
+                            <option value="minionTriple" id="minionTriple_left">minionTriple</option>
+                            <option value="minionRoam" id="minionRoam_left">minionRoam</option>
+                            <option value="feed" id="feed_left">feed</option>
+                            <option value="minionFeed" id="minionFeed_left">minionFeed</option>
+                        </select>
+                        <br>
+                        <label for="rightMouseBtn">RMB:</label>
+                        <select id="rightMouseBtn" class="mouseKeybindDropdown">
+                            <option value="" id="_right" selected="selected"></option>
+                            <option value="doubleSplit" id="doubleSplit_right">doubleSplit</option>
+                            <option value="tripleSplit" id="tripleSplit_right">tripleSplit</option>
+                            <option value="quadSplit" id="quadSplit_right">quadSplit</option>
+                            <option value="split" id="split_right">split</option>
+                            <option value="minionSplit" id="minionSplit_right">minionSplit</option>
+                            <option value="minionStop" id="minionStop_right">minionStop</option>
+                            <option value="minionDouble" id="minionDouble_right">minionDouble</option>
+                            <option value="minionQuad" id="minionQuad_right">minionQuad</option>
+                            <option value="minionTriple" id="minionTriple_right">minionTriple</option>
+                            <option value="minionRoam" id="minionRoam_right">minionRoam</option>
+                            <option value="feed" id="feed_right">feed</option>
+                            <option value="minionFeed" id="minionFeed_right">minionFeed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<div id="shop-window" onclick="if (event.target == this) this.hide()" style="transition: opacity 0.5s ease 0s; opacity: 0; display: none">
+        <div id="shop-window-content">
+            <div id="shop-window-header">
+                <span class="">GloObix Shop</span>
+                <div id="" class="unselectable gameshopCoinContainer">
+                    <div class="horizontalAlignment">
+                        <img src="./assets/img/coin.png" id="" class="coin_img" style="width: 16px;">
+                        <div id="gameshop_coin_amount" class="tokens_container">0</div>
+                    </div>
+                </div>
+            </div>
+            <div id="shop-window-body" class="gameshopbody">
+                <div id="gameshop_Shoplist" class="verticalAlignment">
+                    <div id="shoploader" class="gameshopProcessing" style="display: none;">
+                        <div class="center gameshoploading_center">
+                            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                        </div>
+                    </div>
+                    <div id="shopPackageSelector">
+                        <button id="gameshopAccessButtonBotBoosts" class="gameshopAccessButtons">Minion Boosts</button>
+                        <button id="gameshopMoreCoinsAccess" class="gameshopAccessButtons_gold glow-on-hover">∞ Free Coins
+                            <span class="shoptop"></span>
+                            <span class="shopright"></span>
+                            <span class="shopbottom"></span>
+                            <span class="shopleft"></span>
+                        </button>
+                        <button id="gameshopAccessButtonTutorial" class="gameshopAccessButtons">Coin Tutorial</button>
+                    </div>
+                    <div id="botPackagesContainer" class="gameshopBotPackagesContainer horizontalAlignment">
+                        <div id="2xBots" class="verticalAlignment gameshopPackages">
+                            <img src="./assets/img/shopBotPackageSmall.png" class="gameshopBoosterImages unselectable" />
+                            <span class="gameshopBoosterTitle unselectable">+20% Minions</span>
+                            <div class="gameshopIndividualPackage">
+                                <div>1 hour <span>(<img src="./assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">350)</span></div>
+                                <button id="shopminions1" class="gameshopBuySmall">buy</button>
+                                <span id="shopminionsnotif1" class=""></span>
+                            </div>
+                            <div class="gameshopIndividualPackage">
+                                <div>24 hours <span>(<img src="./assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">495)</span></div>
+                                <button id="shopminions2" class="gameshopBuySmall">buy</button>
+                                <span id="shopminionsnotif2" class=""></span>
+                            </div>
+                        </div>
+                        <div id="3xBots" class="verticalAlignment gameshopPackages">
+                            <img src="./assets/img/shopBotPackageLarge.png" class="gameshopBoosterImages unselectable" />
+                            <span class="gameshopBoosterTitle unselectable">+70% Minions</span>
+                            <div class="gameshopIndividualPackage">
+                                <div>1 hour <span>(<img src="./assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">650)</span></div>
+                                <button id="shopminions3" class="gameshopBuyLarge">buy</button>
+                                <span id="shopminionsnotif3" class=""></span>
+                            </div>
+                            <div class="gameshopIndividualPackage">
+                                <div>24 hours <span>(<img src="./assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">950)</span></div>
+                                <button id="shopminions4" class="gameshopBuyLarge">buy</button>
+                                <span id="shopminionsnotif4" class=""></span>
+                            </div>
+                        </div>
+                        <div id="shopfastcurrency" class="verticalAlignment gameshopPackages shopPackages" style="display: block; position: relative">
+                            <!-- <span class="blackfriday_promo">BLACK FRIDAY DEALS AVAILABLE</span> -->
+    <!--<div class="shopBundleContainer">
+                                <h5 class="shopItemTitles">Small Coins Bundle</h5>
+                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">2500</span>
+                                <button id="buy-bundle-01" class="shopPayButtons">1.99€</button>
+                            </div>
+                            <div class="shopBundleContainer">
+                                <h5 class="shopItemTitles">Medium Coins Bundle</h5>
+                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">4000</span>
+                                <button id="buy-bundle-02" class="shopPayButtons">2.99€</button>
+                            </div>
+                            <div class="shopBundleContainer">
+                                <h5 class="shopItemTitles">Classic Coins Bundle</h5>
+                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">15000</span>
+                                <button id="buy-bundle-03" class="shopPayButtons">9.99€</button>
+                            </div>
+                            <div class="shopBundleContainer">
+                                <h5 class="shopItemTitles">Maxi Coins Bundle</h5>
+                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">25000</span>
+                                <button id="buy-bundle-04" class="shopPayButtons">14.99€</button>
+                            </div>
+                            <div class="shopBundleContainer">
+                                <h5 class="shopItemTitles">MEGA Coins Bundle</h5>
+                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">100000</span>
+                                <button id="buy-bundle-05" class="shopPayButtons">49.99€</button>
+                            </div>
+                            <div class="shopBundleContainer hidden">
+                                <h5 class="shopItemTitles">BlackFriday Medium Coins Bundle</h5>
+                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">50000</span>
+                                <button id="buy-bundle-06" class="shopPayButtons_small"><span class="gameShopOldPrice">29.99</span> 19.99€</button>
+                                <img src="./assets/img/icons/hotdeal.png" id="" class="gameShopHotDeal"/>
+                            </div>
+                            <div class="shopBundleContainer hidden">
+                                <h5 class="shopItemTitles">BlackFriday Large Coins Bundle</h5>
+                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">100000</span>
+                                <button id="buy-bundle-07" class="shopPayButtons_small"><span class="gameShopOldPrice">49.99</span> 34.99€</button>
+                                <img src="./assets/img/icons/hotdeal.png" id="" class="gameShopHotDeal"/>
+                            </div>
+                            <div class="shopBundleContainer hidden">
+                                <h5 class="shopItemTitles">BlackFriday GIANT Coins Bundle</h5>
+                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">150000</span>
+                                <button id="buy-bundle-08" class="shopPayButtons_small"><span class="gameShopOldPrice">79.99</span> 49.99€</button>
+                                <img src="./assets/img/icons/hotdeal.png" id="" class="gameShopHotDeal"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="gameshop_coinsOptions" class="gameshopCoinsOptions verticalAlignment" style="display: none;">
+                        <span class="gameshopCoinsTutorial" style="margin-top: 25px;">How to get coins?</span>
+                        <img class="center gameshopCoinsTutorial unselectable" src="images/gameshopGettingCoinsTutorial.png" />
+                        <p class="gameshopExplications">Join the community on the discord servers: <a href="https://discord.gg/pRmNZqUm4b" target="_blank">GloObix.pro</a> and <a href="https://discord.gg/7RgaKwUnyM" target="_blank">Solo Community</a></p>
+                    </div>
+                    <div id="gameshop_activeBoosterActive">
+                        <p>You have <span id="gameshopActiveBoosterDisplay">no</span> booster active.</p>
+                        <p id="gameshopActiveBoostEasyDisplay"></p>
+                        <p>Use your boosters on any bots gamemode.</p>
+                        <!-- <p><span class="newBadge">NEW!</span> On empty servers you get an automatic <b>FREE</b> random bot package!</p> -->
+    <!--</div>
+                </div>
+                <div id="gameshop_AccountRequired" style="display: none;">
+                    <img class="center gameshopAccountCreationBanner unselectable" src="images/accountLoginInformation.png" />
+                    <p class="info-small">An account is required to use the shop features!</p>
+                    <p class="info-small">Please log-in using Discord to create your GloObix.pro Account.</p>
+                    <button id="gloobix_account_login_button3" class="gloobixAccountLogin2 glow-on-hover">Log-in using Discord</button>
+                    <button id="gloobix_account_login_button_google3" class="gloobixAccountLoginUsingGoogle2 glow-on-hover">Log-in using Google</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="shop-skins-window" onclick="if (event.target == this) this.hide()" style="transition: opacity 0.5s ease 0s; opacity: 0; display: none">
+        <div id="shop-skins-window-content">
+            <div id="shop-skins-window-header">
+                <span class="">GloObix Skin Shop</span>
+                <div id="" class="unselectable gameshopCoinContainer">
+                    <div class="horizontalAlignment">
+                        <img src="./assets/img/coin.png" id="" class="coin_img" style="width: 16px;">
+                        <div id="gameshop_skins_coin_amount" class="tokens_container">0</div>
+                    </div>
+                </div>
+            </div>
+            <div id="shop-skins-body" class="gameshopbody">
+                <div id="gameshop_skins_shoplist" class="verticalAlignment blue_bg">
+                    <div class="horizontalAlignment">
+                        <button id="shop_premium_skins" class="gameShopAutoButtons glow-on-hover">Premium</button>
+                        <button id="shop_level_skins" class="gameShopAutoButtons glow-on-hover">Levels</button>
+                        <button id="shop_piece_skins" class="gameShopAutoButtons glow-on-hover">Pieces</button>
+                        <button id="shop_special_skins" class="gameShopAutoButtons glow-on-hover">Special</button>
+                        <button id="shop_bundled_skins" class="gameShopAutoButtons glow-on-hover">Bundles</button>
+                        <button id="shop_free_skins" class="gameShopAutoButtons glow-on-hover">Free</button>
+                        <button id="shop_owned_skins" class="gameShopAutoButtons glow-on-hover">Owned</button>
+                        <button id="shop_seasonal_skins" class="gameShopAutoButtons glow-on-hover hidden">Seasonal<span id="seasonal_skins_notification" class="gameShopNotification"></span><span id="seasonal_countdown" class="skinCountdown"></span></button>
+                    </div>
+                    <div class="verticalAlignment skin_shop_bottom_scroll">
+                        <div class="skin_notouch_border">
+                            <div id="unlockable_container" class="horizontalAlignment"></div>
+                        </div>
+                        <div class="skin_notouch_border">
+                            <div id="levels_container" class="horizontalAlignment hidden"></div>
+                        </div>
+                        <div class="skin_notouch_border">
+                            <div id="piece_container" class="horizontalAlignment hidden"></div>
+                        </div>
+                        <div class="skin_notouch_border">
+                            <div id="special_container" class="horizontalAlignment hidden"></div>
+                        </div>
+                        <div class="skin_notouch_border">
+                            <div id="bundle_container" class="horizontalAlignment hidden"></div>
+                        </div>
+                        <div class="skin_notouch_border">
+                            <div id="free_container" class="horizontalAlignment hidden"></div>
+                        </div>
+                        <div class="skin_notouch_border">
+                            <div id="owned_skins_container" class="horizontalAlignment hidden"></div>
+                        </div>
+                        <div class="skin_notouch_border">
+                            <div id="seasonal_container" class="horizontalAlignment hidden"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div id="gameshop_AccountRequired" style="display: none;">
+                    <img class="center gameshopAccountCreationBanner unselectable" src="images/accountLoginInformation.png" />
+                    <p class="info-small">An account is required to use the shop features!</p>
+                    <p class="info-small">Please log-in using Discord to create your GloObix.pro Account.</p>
+                    <button id="gloobix_account_login_button3" class="gloobixAccountLogin2 glow-on-hover">Log-in using discord</button>
+                </div> -->
+    <!--</div>
+        </div>
+    </div>
+
+    <div id="shop-skins-modal-window" onclick="if (event.target == this) this.hide()" style="transition: opacity 0.5s ease 0s; opacity: 0; display: none">
+        <div id="shop-skins-modal-window-content">
+            <div id="shop-skins-modal-window-header">
+                <span class="">Skin Purchase</span>
+            </div>
+            <div id="shop-skins-body" class="modalSkinsPurchasedBody">
+                <img class="circular skinPurchasedImg" id="skinShopPurchaseModal" src="">
+                <span id="skinShopPurchaseModalFooter" class="skinShopPurchaseModalFooter">Purchase Successful!</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="potions-modal-window" onclick="if (event.target == this) this.hide()" style="transition: opacity 0.5s ease 0s; opacity: 0; display: none">
+        <div id="potions-modal-window-content">
+            <div id="potions-modal-window-header">
+                <span class="">Potion Opened!</span>
+            </div>
+            <div id="potions-modal-window-body" class="modalSkinsPurchasedBody">
+                <div class="verticalAlignment">
+                    <div class="verticalAlignment" style="display: contents;">
+                        <span id="" class="skinShopPurchaseModalFooter">Your rewards:</span>
+                        <span id="potion_rewards_mycoins">0 coins</span>
+                        <div id="potion_rewards_display">
+                            <span id="potion_rewards_myxp">0 XP</span>
+                        </div>
+                    </div>
+                    <div id="potion_rewards_skin_pieces" class="horizontalAlignment">
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="giftcodes-modal-window" onclick="if (event.target == this) this.hide()" style="transition: opacity 0.5s ease 0s; opacity: 0; display: none">
+        <div id="giftcodes-modal-window-content">
+            <div id="giftcodes-modal-window-header">
+                <span class="unselectable">Gift Code Center</span>
+            </div>
+            <div id="giftcodes-body" class="modalGiftCodesBody verticalAlignment">
+                <span id="skinShopPurchaseModalFooter" class="skinShopPurchaseModalFooter unselectable">Got any gift code? Use it there in time to collect great prizes before it runs out of uses!</span>
+                <img src="./assets/img/icons/GiftCodeBanner.png" id="" class="modalGiftCodesBanner">
+                <input type="text" class="textbox space-cadet border giftCodeInput" placeholder="Gift code" id="gloobixGiftCodeInput" />
+                <button class="giftCodeButtonClaim" id="giftCodeButtonClaim">Claim Rewards</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="giftcodes-rewards-modal-window" onclick="if (event.target == this) this.hide()" style="transition: opacity 0.5s ease 0s; opacity: 0; display: none">
+        <div id="giftcodes-rewards-modal-window-content">
+            <div id="giftcodes-rewards-modal-window-header">
+                <span class="unselectable">Gift Code Reward</span>
+            </div>
+            <div id="giftcodes-rewards-body" class="modalGiftCodesRewardsBody">
+                <!-- body of the reward display -->
+    <!--</div>
+        </div>
+    </div>
+
+    <div id="quest-center-window" onclick="if (event.target == this) this.hide()" style="transition: opacity 0.5s ease 0s; opacity: 0; display: none">
+        <div id="quest-center-window-content">
+            <div id="quest-center-window-header">
+                <span class="">GloObix Quest Center</span>
+                <div id="" class="unselectable gameshopCoinContainer">
+                    <div class="horizontalAlignment">
+                        <img src="./assets/img/coin.png" id="" class="coin_img" style="width: 16px;">
+                        <div id="gameshop_quests_coin_amount" class="tokens_container">0</div>
+                    </div>
+                </div>
+            </div>
+            <div id="quest-center-body" class="gameshopbody blue_bg">
+                <div class="verticalAlignment">
+                    <span class="questcenterdesc">Everyday, take part of your daily quest to grab some rewards during the week.</span>
+                    <span class="questcenterdesc">Work all together to unlock even more coins and skin pieces! Pretty cool, isn't it?</span>
+                    <span class="questcenterdesc" style="color:#af5858">The Weekly Quests resets every monday at UTC+1</span>
+                </div>
+                <div id="gameshop_skins_shoplist" class="verticalAlignment blue_bg">
+                    <div class="verticalAlignment questCenter_Centered questcenter_200">
+                        <span class="white">My Weekly Quest Progress</span>
+                        <div id="progressbar_personal" class="margintop20">
+                            <div id="progressbar_personal_bar" class="textfix"></div>
+                            <span id="progressbar_personal_bar_progress" class="personalprogress_ctr">0📋</span>
+                        </div>
+                        <div class="horizontalAlignment">
+                            <span id="questbadgeperso3_description" class="questbadgeperso3_description hidden">
+                                <img src="./assets/img/chests/bronze_chest.png" id="" class="smallChestIcon">
+                                <br/>Solo Bronze Chest<br/>
+                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 50-150<br/>
+                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 1-2
+                            </span>
+                            <span class="questbadgeperso3" id="questbadgeperso3">3</span>
+                            <span id="questbadgeperso5_description" class="questbadgeperso5_description hidden">
+                                <img src="./assets/img/chests/silver_chest.png" id="" class="smallChestIcon">
+                                <br/>Solo Silver Chest<br/>
+                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 100-250<br/>
+                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 2-3
+                            </span>
+                            <span class="questbadgeperso5" id="questbadgeperso5">5</span>
+                            <span id="questbadgeperso7_description" class="questbadgeperso7_description hidden">
+                                <img src="./assets/img/chests/gold_chest.png" id="" class="smallChestIcon">
+                                <br/>Solo Gold Chest<br/>
+                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 200-400<br/>
+                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 3-5
+                            </span>
+                            <span class="questbadgeperso7" id="questbadgeperso7">7</span>
+                        </div>
+                        <span class="white margintop20" id="myQuestInfoSpan" style="display: none;"></span> 
+                        <div id="personal_quest_open_container" class="personal_quest_open_ctnr">
+                            <span class="white noChestFooter" id="no_personal_chest_span">Complete your daily quests to unlock chests!</span>
+                            <div class="gold_chest" id="personal_gold_chest" style="display: none;"></div>
+                            <span id="private_chest_type_span" class="white" style="display: none;"></span>
+                            <button class="private_open_chest" id="open_personal_chest" style="display: none;">🗝️Open</button>
+                            <span id="personal_chest_opened_span" class="quest_center_opened_span" style="display: none;margin-top: -50px;">No Chest</span>
+                            <div id="personal_quest_opened_container_1" class="horizontalAlignment">
+                                <div id="personal_quest_coins_1" class="questCenterVerticalDisplay" style="display: none;">
+                                    <img class="rewardCoinsSmall" src="./assets/img/icons/GloObixCoins.png">
+                                    <span class="quest_center_skin_span" id="quest_center_coins_personal_span_1"><b>0</b> coins</span>
+                                </div>
+                                <div id="personal_quest_skins_1_1" style="display: none;" class="questskinreward">
+                                    <img id="personal_quest_skins_1_1_skin" class="questCenterCircular" src="./skins/no.png">
+                                    <span id="personal_quest_skins_1_1_pieces" class="quest_center_skin_span"><b>0</b> pieces</span>
+                                </div>
+                                <div id="personal_quest_skins_2_1" style="display: none;" class="questskinreward">
+                                    <img id="personal_quest_skins_2_1_skin" class="questCenterCircular" src="./skins/no.png">
+                                    <span id="personal_quest_skins_2_1_pieces" class="quest_center_skin_span"><b>0</b> piece</span>
+                                </div>
+                                <div id="personal_quest_skins_3_1" style="display: none;" class="questskinreward">
+                                    <img id="personal_quest_skins_3_1_skin" class="questCenterCircular" src="./skins/no.png">
+                                    <span id="personal_quest_skins_3_1_pieces" class="quest_center_skin_span"><b>0</b> pieces</span>
+                                </div>
+                            </div>
+                            <span id="personal_chest_countdown_span" class="quest_center_opened_span countdownSpan01"></span>
+                        </div>              
+                    </div>
+                    <div class="verticalAlignment questCenter_Centered questcenter_200">
+                        <span class="white">Weekly Quest Progress (All Players)</span>
+                        <div id="progressbar_public" class="margintop20">
+                            <div id="progressbar_public_bar" class="textfix"></div>
+                            <span id="progressbar_public_bar_progress" class="publicprogress_ctr">0📋</span>
+                        </div>
+                        <div class="horizontalAlignment">
+                            <span id="questbadgepublic10_description" class="questbadgepublic10_description hidden">
+                                <img src="./assets/img/chests/iron_chest.png" id="" class="smallChestIcon">
+                                <br/>Iron Chest<br/>
+                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 50-150<br/>
+                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 1-2
+                            </span>
+                            <span class="questbadgepublic10" id="questbadgepublic10">10</span>
+                            <span id="questbadgepublic25_description" class="questbadgepublic25_description hidden">
+                                <img src="./assets/img/chests/bronze_chest.png" id="" class="smallChestIcon">
+                                <br/>Bronze Chest<br/>
+                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 150-200<br/>
+                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 2-4
+                            </span>
+                            <span class="questbadgepublic25" id="questbadgepublic25">25</span>
+                            <span id="questbadgepublic50_description" class="questbadgepublic50_description hidden">
+                                <img src="./assets/img/chests/silver_chest.png" id="" class="smallChestIcon">
+                                <br/>Silver Chest<br/>
+                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 250-300<br/>
+                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 3-5
+                            </span>
+                            <span class="questbadgepublic50" id="questbadgepublic50">50</span>
+                            <span id="questbadgepublic75_description" class="questbadgepublic75_description hidden">
+                                <img src="./assets/img/chests/gold_chest.png" id="" class="smallChestIcon">
+                                <br/>Gold Chest<br/>
+                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 350-400<br/>
+                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 4-6
+                            </span>
+                            <span class="questbadgepublic75" id="questbadgepublic75">75</span>
+                            <span id="questbadgepublic100_description" class="questbadgepublic100_description hidden">
+                                <img src="./assets/img/chests/platinum_chest.png" id="" class="smallChestIcon">
+                                <br/>Platinum Chest<br/>
+                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 450-500<br/>
+                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 5-7
+                            </span>
+                            <span class="questbadgepublic100" id="questbadgepublic100">100</span>
+                            <span id="questbadgepublic150_description" class="questbadgepublic150_description hidden">
+                                <img src="./assets/img/chests/diamond_chest.png" id="" class="smallChestIcon">
+                                <br/>Diamond Chest<br/>
+                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 550-1500<br/>
+                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 7-10
+                            </span>
+                            <span class="questbadgepublic150" id="questbadgepublic150">150</span>
+                        </div>
+                        <span class="white margintop20" id="allQuestInfoSpan" style="display: none;"></span>
+                        <div id="public_quest_open_container" class="public_quest_open_ctnr">
+                            <span class="white noChestFooter" id="no_public_chest_span">Keep completing daily quests with the other players to unlock chests!</span>
+                            <div class="gold_chest" id="public_gold_chest" style="display: none;"></div>
+                            <span id="public_chest_type_span" class="white" style="display: none;"></span>
+                            <button class="public_open_chest" id="open_public_chest" style="display: none;">🗝️Open</button>
+                            <span id="public_chest_opened_span" class="quest_center_opened_span" style="display: none;margin-top: -50px;">No Chest</span>
+                            <div id="public_quest_opened_container_1" class="horizontalAlignment">
+                                <div id="public_quest_coins_1" class="questCenterVerticalDisplay" style="display: none;">
+                                    <img class="rewardCoinsSmall" src="./assets/img/icons/GloObixCoins.png">
+                                    <span class="quest_center_skin_span" id="quest_center_coins_public_span_1"><b>0</b> coins</span>
+                                </div>
+                                <div id="public_quest_skins_1_1" style="display: none;" class="questskinreward">
+                                    <img id="public_quest_skins_1_1_skin" class="questCenterCircular" src="./skins/no.png">
+                                    <span id="public_quest_skins_1_1_pieces" class="quest_center_skin_span"><b>0</b> pieces</span>
+                                </div>
+                                <div id="public_quest_skins_2_1" style="display: none;" class="questskinreward">
+                                    <img id="public_quest_skins_2_1_skin" class="questCenterCircular" src="./skins/no.png">
+                                    <span id="public_quest_skins_2_1_pieces" class="quest_center_skin_span"><b>0</b> piece</span>
+                                </div>
+                                <div id="public_quest_skins_3_1" style="display: none;" class="questskinreward">
+                                    <img id="public_quest_skins_3_1_skin" class="questCenterCircular" src="./skins/no.png">
+                                    <span id="public_quest_skins_3_1_pieces" class="quest_center_skin_span"><b>0</b> pieces</span>
+                                </div>
+                            </div>
+                            <span id="public_chest_countdown_span" class="quest_center_opened_span countdownSpan01"></span>
+                        </div>                           
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="overlays"
+        style="
+        transition: opacity 0.5s ease 0s;
+        opacity: 1; /* display: flex; */ /* flex-direction: column; */ /* justify-content: space-around; */ /* flex-wrap: wrap; */ /* flex-direction: column; */">
+        <div class="maincont">
+            <div class="flex spacing" id="tabs">
+                <div class="menuContainer space-cadet spacing">
+                    <div id="settings" style="position: relative; display: block; height: 100%;">
+                        <!-- <div id="showSettingsDiv" class="control-group"> -->
+    <!-- <br />
+                            <h4>Experimental Features</h4>
+
+                            <div id="xpProgress">
+                                <div id="xpProgressBar"
+                                    class="progress-bar progress-bar-success progress-bar-striped active pr1">
+                                    <span class="fa fa-star checked fa-3x lvlstardisplay">
+                                        <span class="lvldisplay" id="level">0
+                                        </span>
+                                    </span>
+                                </div>
+                            </div> -->
+
+    <!-- <div style="position: relative; padding-left: 30px" align="left">
+                                <div style="position: relative">
+                                    <div style="position: relative; z-index: 2">
+                                        <img src="./assets/img/star.png" alt="LEVEL" style="width: 10%; transform: rotate(-10deg)" />
+                                        <span id="level" class="xpStar">100</span>
+                                        <span id="displayLevel" style="color: white"><b>850246 / 14500000</b> XP&nbsp;(<b>5</b>%)</span>
+                                    </div>
+                                    <div id="myProgress">
+                                        <div id="myBar" style="width: 5%"></div>
+                                    </div>
+                                </div>
+                            </div> -->
+    <!-- <div></div>
+                            <br>
+                            <p></p>
+
+                            <p id="displayScore">Latest Score: 0</p>
+                            <p>----------------</p>
+                            <h1>Web Client Changelog</h1>
+                            <p>+ Added new gamemode : Party Experimental Big Bots</p>
+                            <p>+ Fixed few skins not working</p>
+                            <p>+ Performance improvements</p>
+                            <p>+ Minimap customization</p>
+                            <p>+ Server-sided improvements</p>
+                            <p>+ Fixed privacy settings not hiding while playing</p>
+                            <p>+ Added spectate key (customizable)</p>
+                            <p>- Removed few unplayed gamemodes</p>
+                            <p>----------------</p>
+                            <div id="instructions"> -->
+
+    <!-- <p class="text-muted center">Chrome Dev and Brave Browsers are actually more performant
+                                    while running the game,
+                                    allowing your physics to look way smoother and your fps going up a bit more. Try
+                                    these browsers if you wanna see experimental performance improvements (under
+                                    testing)</p> -->
+
+    <!-- <div id="events">
+                                    <!-- <p class="text-muted center">Clip Submissions Ended!
+                                        <a href="https://forms.gle/zdjQLRETywk7tVnC9" target="_blank">Click Here</a>
+                                    </p> -->
+    <!-- <div>
+                                        <a href="https://forms.gle/zdjQLRETywk7tVnC9" target="_blank"
+                                            class="center promoText">Month #1 Community Clips</a>
+                                        <!-- <a href="" target="_blank" class="center promoText">Last Chance !</a> -->
+    <!--<img class="center promoImage" src="images/week_1.gif" />
+                                    </div>
+                                    <br>
+                                    <!-- <p class="text-muted center">Results will be available soon :)</p> -->
+    <!-- <br>
+                                    <p><span class="newBadge">NEW</span> New gamemode - EXPERIMENTAL PARTY BIG BOTS
+                                    </p> -->
+    <!-- <p class="text-muted center">Vote for Selfeed Autorestart Update:
+                                        <a href="https://forms.gle/25wBTD2q2ixy7AtA9" target="_blank">Here</a>
+                                    </p> -->
+
+    <!--</div> -->
+
+    <!-- <div class="recordingBox" onclick="this.classList.add('expand'); document.getElementById('events').style.display = 'none';">
+                                <div class="from">
+                                   <div class="from-contents">
+                                      <div class="name">Testing ⚙️</div>
+                                   </div>
+                                </div>
+                                <div class="to">
+                                   <div class="to-contents">
+                                      <div class="top">
+                                         <div class="avatar-large me"></div>
+                                         <div class="name-large">Under Dev Work</div>
+                                         <div class="xx-touch" onclick="document.querySelector('.recordingBox').classList.remove('expand'); event.stopPropagation(); document.getElementById('events').style.display = 'block';">
+                                            <div class="xx">
+                                               <div class="line3"></div>
+                                               <div class="line4"></div>
+                                            </div>
+                                         </div>
+                                      </div>
+                                        <div class="bottom">
+                                            <br>
+                                            <video autoplay controls width="300" height="150"></video>
+                                            <button class="buttonStyle center" id="downloadVideo">Download</button>
+                                        </div>
+                                      </div>
+                                 </div>
+                            </div>  -->
+
+    <!-- <video autoplay controls width="300" height="150"></video> -->
+
+
+    <!--  </div> -->
+    <!-- </div> -->
+    <!--   <div id="showSettingsDiv" class="control-group">
+                            <div class="UserContainer-accounts">
+                                <div id="account_loaded" style="display: none;">
+                                    <div id="newPlayerGiftCode" class="hidden">
+                                        <span class="starterPackFooter">New player? Use code: GLOOBIXSTARTERPACK for free coins & skin pieces!</span>
+                                        <span class="starterPackCloseMessage" id="starterpack_close">⛌</span>
+                                    </div>
+                                    <p class="info unselectable">Account (experimental)</p>
+                                    <div class="horizontalAlignmentAccount">
+                                        <img id="userAvatar" src="https://gloobix.pro/web/icon.png" class="userAvatar unselectable">
+                                        <div class="verticalAlignment">
+                                            <div id="playercoins_container" class="floatleft">
+                                                <div class="horizontalAlignment unselectable">
+                                                    <img src="./assets/img/coin.png" id="" class="coin_img" style="width: 16px;" />
+                                                    <div id="usercoins_amount" class="coins_container">0</div>
+                                                </div>
+                                                <div class="playerbaseRewardCenter hidden" id="playerbaseRewardCenter_button">
+                                                    <img src="./assets/img/chests/bronze_chest.png" id="" class="smallChestIconRewardCenter">
+                                                    <span class="notificationRewardCenterButton unseen-count-animation hidden" id="notificationRewardCenterButton"></span>
+                                                </div>
+                                                <div class="playerbaseGiftCodeCenter hidden" id="playerbaseGiftCodeCenter_button">
+                                                    <img src="./assets/img/icons/GiftCodeCoupon.png" id="" class="smallChestIconRewardCenter">
+                                                    <span class="notificationRewardCenterButton unseen-count-animation hidden" id=""></span>
+                                                </div>
+                                                <div class="playerbaseLeagueLeaderboardCenter hidden" id="playerbaseLeaguesCenter_button">
+                                                    <img src="./assets/img/icons/league_rankings.png" id="" class="smallChestIconRewardCenter">
+                                                    <span class="notificationRewardCenterButton unseen-count-animation hidden" id="notificationLeagueCenterButton"></span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p id="displayProgress" class="smallText unselectable" style="display: none;"></p>
+                                                <p id="displayHighscore" class="smallText unselectable" style="display: none;"></p>
+                                                <p id="gloobixAccountUsername" class="info-small-menu unselectable"></p>
+                                                <button id="gloobix_account_login_button" class="gloobixAccountLoginUsingDiscord glow-on-hover">Log-in using Discord</button>
+                                                <button id="gloobix_account_login_button_google" class="gloobixAccountLoginUsingGoogle glow-on-hover">Log-in using Google</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p></p>
+                                    <div id="xpProgress">
+                                        <div id="xpProgressBar"
+                                            class="progress-bar progress-bar-success progress-bar-striped active pr1">
+                                            <span class="fa fa-star checked fa-3x lvlstardisplay">
+                                                <span class="lvldisplay unselectable" id="level">0
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="account_loading">
+                                    <div class="center menu_account_loading_center">
+                                        <div class="lds-ripple"><div></div><div></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="UserContainer-other">
+                                <div class="horizontalAlignment">
+                                    <div>
+                                        <button id="freeCoinsButton" class="freeCoinsButton">Free Coins</button>
+                                        <div id="countdown" class="freeCoinsTimer"></div>
+                                    </div>
+                                    <button id="gameshopMenuButton" class="gameshopMenuButton" onclick=""
+                                        style="display: block">Game Shop</button>
+                                    <!-- <button class="skinsButton" onclick="openSkinsList()">Skin Gallery</button> -->
+    <!-- <button class="settingsButton" onclick="showSettings()">Settings</button> -->
+    <!--<button id="tourneyModesButton" class="settingsButton" onclick=""
+                                        style="display: none;">Tourneys</button>
+                                    <button id="partyMenuButton" class="settingsButton" onclick=""
+                                        style="display: none">Party Menu</button>
+                                    <button id="skinShopButton" class="settingsButton hidden" onclick="">Skin Shop</button>
+                                </div>
+                            </div>
+                            <div class="UserContainer-events">
+                                <div>
+                                    <!-- <p class="info">OnGoing Events</p> -->
+    <!-- <a href="https://forms.gle/zdjQLRETywk7tVnC9" target="_blank"
+                                        class="center promoText">Month #1 Community Clips</a>
+                                    <img class="center promoImage" src="images/week_1.gif"> -->
+    <br>
+    <!-- <p class="info-verySmall">Season #2 Ending in July 2022! </p> -->
+
+    <!-- <p class="info-verySmall">Season #2 Ending in December 2023! </p>
+                                    <a href="https://forms.gle/ctBRAesNyGNE1jbg8" target="_blank"
+                                        class="center promoText_smaller" style="color: aliceblue;">Season #2 Community Clips</a>
+                                    <img class="center promoImage_smaller" src="images/contestWinner1.gif"> -->
+    <!--<p class="info-verySmall">Submit your clips now for the contest!</p>
+                                    <a href="https://forms.gle/mx66bSPupRQC2ULF6" target="_blank"
+                                        class="center promoText_smaller" style="color: aliceblue;">Community Clips (SEASON 2)</a>
+                                    <!-- <img class="center promoImage_smaller" src="images/gifs/GloObixContest1_Winner.gif"> -->
+    <!--<video class="center promoImage_smaller" autoplay loop muted playsinline style="height: 250px;">
+                                    <source src="images/videos/GloObixContest1.mp4" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+
+
+                                    <br><br>
+                                    <!-- <p class="info-verySmall">Check out the latest community content! </p> -->
+    <!-- <iframe width="232" height="125" src="https://www.youtube.com/embed/roy7pc-rd5o?rel=0&mute=1&showinfo=0&autoplay=1&controls=0&modestbranding=1&showsearch=0&loop=1" frameborder="0" allow="autoplay" allowfullscreen style="margin-left: 30px;">
+                                    </iframe> -->
+    <!-- <iframe width="232" height="125" src="https://www.youtube.com/embed/Q7NchCyp8P4?rel=0&mute=1&showinfo=0&autoplay=1&controls=0&modestbranding=1&showsearch=0&loop=1" frameborder="0" allow="autoplay" allowfullscreen style="margin-left: 30px;">
+                                    </iframe> -->
+
+
+
+
+    <!-- <div id="youtubePromo">
+                                        <p class="info-verySmall">Check out the latest community content! </p>
+                                        <iframe id="videoIframe" width="232" height="125" frameborder="0" allow="autoplay" allowfullscreen style="margin-left: 30px;"></iframe>
+                                        <script>
+                                            var iframe = document.getElementById('videoIframe');
+                                            iframe.src = "https://www.youtube.com/embed/" + video_token + "?rel=0&mute=1&showinfo=0&autoplay=1&controls=0&modestbranding=1&showsearch=0&loop=1";
+                                        </script>
+                                    </div> -->
+    <!-- <div id="potionContainer" class="potionContainer" style="display: none;">
+                                        <div id="rowPotionContainer" class="horizontalAlignment">
+                                            <div id="potion_holder_1" class="potionHolder">
+                                                <div id="potionIcon1" class="potionImageHolder empty_slot"></div>
+                                                <span id="potionSpan1" class="potionSpan"></span>
+                                                <button id="potionButton1" class="potionButton_disabled">Empty</button>
+                                            </div>
+                                            <div id="potion_holder_2" class="potionHolder_DEV">
+                                                <div id="potionIcon2" class="potionImageHolder empty_slot"></div>
+                                                <span id="potionSpan2" class="potionSpan"></span>
+                                                <button id="potionButton2" class="potionButton_disabled">Empty</button>
+                                            </div>
+                                            <div id="potion_holder_3" class="potionHolder">
+                                                <div id="potionIcon3" class="potionImageHolder empty_slot"></div>
+                                                <span id="potionSpan3" class="potionSpan"></span>
+                                                <button id="potionButton3" class="potionButton_disabled">Empty</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+
+
+
+
+                                    <!-- <iframe src="https://player.twitch.tv/?channel=thebigbossce&parent=gloobix.pro" frameborder="0" allowfullscreen="true" scrolling="no" width="290" height="125"></iframe> -->
+    <!-- <div style="width: 232px; height: 125px; float: none; clear: both; margin-left: 30px;" id="youtube-embed">
+                                        <iframe width="232" height="125" id="myIframe" src="https://www.youtube.com/embed/roy7pc-rd5o?rel=0&mute=1&showinfo=0&controls=0&modestbranding=1&showsearch=0&loop=1" frameborder="0" allowfullscreen>
+                                        </iframe>
+                                    </div> -->
+
+    <!-- <p class="info-verySmall">Community Clips Contest Season #1 available !</p>
+                                    <iframe class="center promoImagePromotions" style="margin-top: -5px;"
+                                        src="//youtube.com/embed/NPGxHMZEkAw" frameborder="0" allowfullscreen>
+                                    </iframe> -->
+    <!-- <p class="info-verySmall">New skins Available</p>
+                                    <img id="PromoContent" onclick="showNewsPopup()" class="center promoImagePromotions"
+                                        src="images/newskins.png"> -->
+    <!--  <div id="changelog" class="unselectable" style="display: none;"> <!-- <span class="newBadge">NEW UPDATE!</span> -->
+    <!--    <p class="info-small">Recent changelog:</p>
+                                        <p class="info-verySmall">--- July 2024 ---</p>
+                                        <p class="info-verySmall">Community Clips Contest - Season 2 Started!</p>
+                                        <p class="info-verySmall">Daily quests coming back soon, fully reworked</p>
+                                        <p class="info-verySmall">Many bug fixes</p>
+                                        <!-- <p class="info-verySmall">--- May 2024 ---</p>
+                                        <p class="info-verySmall">Summer Season Pass Coming in June</p>
+                                        <p class="info-verySmall">Daily quests update still under work</p>
+                                        <p class="info-verySmall">Gameservers improvements</p>
+                                        <p class="info-verySmall">Updated mobile version</p>
+                                        <p class="info-verySmall">--- April 2024 ---</p>
+                                        <p class="info-verySmall">Many bug fixes</p>
+                                        <p class="info-verySmall"></p> -->
+    <!-- <p class="info-verySmall">--- February 2024 ---</p> -->
+    <!--  <p class="info-verySmall">Added minimap settings & ghost cells.</p> -->
+    <!-- <p class="info-verySmall">Leaderboard autorestart announcement fixed.</p> -->
+    <!-- <p class="info-verySmall">Added <b>mouse controls</b> on settings!</p>
+                                        <p class="info-verySmall">Server updates & lag reduced up to 75%!</p> -->
+    <!-- <p class="info-verySmall">--- January 2024 ---</p> -->
+    <!-- <p class="info-verySmall">New Year Celebration Season Pass Available!</p> -->
+    <!-- <p class="info-verySmall">Added Proximity Spawn! Spawn where you died!</p> -->
+    <!-- <p class="info-verySmall">--- NEW YEAR 2024 ---</p>
+                                        <p class="info-verySmall">Added in-game shop and minion boosters!</p>
+                                        <p class="info-verySmall">Fixed game issues with profiles and skins</p>
+                                        <p class="info-verySmall">Updated Party Mode Big Bots Experimental</p> -->
+    </div>
+    <!-- <div>
+                                        <script>(function(t,e,s,n){var o,a,c;t.SMCX=t.SMCX||[],e.getElementById(n)||(o=e.getElementsByTagName(s),a=o[o.length-1],c=e.createElement(s),c.type="text/javascript",c.async=!0,c.id=n,c.src="https://widget.surveymonkey.com/collect/website/js/tRaiETqnLgj758hTBazgdxS0j6TnX5medolHDmBMkdOGklfmiuVPkaRDzICodOwV.js",a.parentNode.insertBefore(c,a))})(window,document,"script","smcx-sdk");</script>
+                                    </div> -->
+    <!-- </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+
+    <div id="overlays"
+        style="
+        transition: opacity 0.5s ease 0s;
+        opacity: 1; /* display: flex; */ /* flex-direction: column; */ /* justify-content: space-around; */ /* flex-wrap: wrap; */ /* flex-direction: column; */">
+        <div class="maincont">
+            <div class="flex spacing" id="tabs" style="transform: scale(0.667037);">
+                <div class="menuContainer space-cadet spacing">
+                    <div id="settings" style="position: relative; display: block; height: 100%;">
+                        <!-- <div id="showSettingsDiv" class="control-group"> -->
+                        <!-- <br />
+                            <h4>Experimental Features</h4>
+
+                            <div id="xpProgress">
+                                <div id="xpProgressBar"
+                                    class="progress-bar progress-bar-success progress-bar-striped active pr1">
+                                    <span class="fa fa-star checked fa-3x lvlstardisplay">
+                                        <span class="lvldisplay" id="level">0
+                                        </span>
+                                    </span>
+                                </div>
+                            </div> -->
+
+                        <!-- <div style="position: relative; padding-left: 30px" align="left">
+                                <div style="position: relative">
+                                    <div style="position: relative; z-index: 2">
+                                        <img src="assets/img/star.png" alt="LEVEL" style="width: 10%; transform: rotate(-10deg)" />
+                                        <span id="level" class="xpStar">100</span>
+                                        <span id="displayLevel" style="color: white"></span>
+                                    </div>
+                                    <div id="myProgress">
+                                        <div id="myBar" style="width: 50%"></div>
+                                    </div>
+                                </div>
+                            </div> -->
+                        <!-- <div></div>
+                            <br>
+                            <p></p>
+
+                            <p id="displayScore">Latest Score: 0</p>
+                            <p>----------------</p>
+                            <h1>Web Client Changelog</h1>
+                            <p>+ Added new gamemode : Party Experimental Big Bots</p>
+                            <p>+ Fixed few skins not working</p>
+                            <p>+ Performance improvements</p>
+                            <p>+ Minimap customization</p>
+                            <p>+ Server-sided improvements</p>
+                            <p>+ Fixed privacy settings not hiding while playing</p>
+                            <p>+ Added spectate key (customizable)</p>
+                            <p>- Removed few unplayed gamemodes</p>
+                            <p>----------------</p>
+                            <div id="instructions"> -->
+
+                        <!-- <p class="text-muted center">Chrome Dev and Brave Browsers are actually more performant
+                                    while running the game,
+                                    allowing your physics to look way smoother and your fps going up a bit more. Try
+                                    these browsers if you wanna see experimental performance improvements (under
+                                    testing)</p> -->
+
+                        <!-- <div id="events">
+                                    <!-- <p class="text-muted center">Clip Submissions Ended!
+                                        <a href="https://forms.gle/zdjQLRETywk7tVnC9" target="_blank">Click Here</a>
+                                    </p> -->
+                        <!-- <div>
+                                        <a href="https://forms.gle/zdjQLRETywk7tVnC9" target="_blank"
+                                            class="center promoText">Month #1 Community Clips</a>
+                                        <!-- <a href="" target="_blank" class="center promoText">Last Chance !</a> -->
+                        <!--<img class="center promoImage" src="assets/img/week_1.gif" />
+                                    </div>
+                                    <br>
+                                    <!-- <p class="text-muted center">Results will be available soon :)</p> -->
+                        <!-- <br>
+                                    <p><span class="newBadge">NEW</span> New gamemode - EXPERIMENTAL PARTY BIG BOTS
+                                    </p> -->
+                        <!-- <p class="text-muted center">Vote for Selfeed Autorestart Update:
+                                        <a href="https://forms.gle/25wBTD2q2ixy7AtA9" target="_blank">Here</a>
+                                    </p> -->
+
+                        <!--</div> -->
+
+                        <!-- <div class="recordingBox" onclick="this.classList.add('expand'); document.getElementById('events').style.display = 'none';">
+                                <div class="from">
+                                   <div class="from-contents">
+                                      <div class="name">Testing ⚙️</div>
+                                   </div>
+                                </div>
+                                <div class="to">
+                                   <div class="to-contents">
+                                      <div class="top">
+                                         <div class="avatar-large me"></div>
+                                         <div class="name-large">Under Dev Work</div>
+                                         <div class="xx-touch" onclick="document.querySelector('.recordingBox').classList.remove('expand'); event.stopPropagation(); document.getElementById('events').style.display = 'block';">
+                                            <div class="xx">
+                                               <div class="line3"></div>
+                                               <div class="line4"></div>
+                                            </div>
+                                         </div>
+                                      </div>
+                                        <div class="bottom">
+                                            <br>
+                                            <video autoplay controls width="300" height="150"></video>
+                                            <button class="buttonStyle center" id="downloadVideo">Download</button>
+                                        </div>
+                                      </div>
+                                 </div>
+                            </div>  -->
+
+                        <!-- <video autoplay controls width="300" height="150"></video> -->
+
+
+                        <!--  </div> -->
+                        <!-- </div> -->
+                        <div id="showSettingsDiv" class="control-group">
+                            <div class="UserContainer-accounts">
+                                <div id="account_loaded" style="display: block;">
+                                    <div id="newPlayerGiftCode" class="">
+                                        <span class="starterPackFooter" id="starterPakFooter">New player? Use code:
+                                            GLOOBIXSTARTERPACK for free
+                                            coins &amp; skin pieces!</span>
+                                        <span class="starterPackCloseMessage" id="starterpack_close"
+                                            onclick="if (event.target == this) clloseStarterPack(); this.hide( 0.5 )">⛌</span>
+                                    </div>
+                                    <p class="info unselectable animated_rainbow_1">Account</p>
+                                    <div class="horizontalAlignmentAccount">
+                                        <img id="userAvatar" src="assets/img/favicon.png"
+                                            class="userAvatar unselectable">
+                                        <div class="verticalAlignment">
+                                            <div id="playercoins_container" class="floatleft">
+                                                <div class="horizontalAlignment unselectable">
+                                                    <img src="assets/img/coin.png" id="" class="coin_img"
+                                                        style="width: 16px;">
+                                                    <div id="usercoins_amount" class="coins_container">0</div>
+                                                </div>
+                                                <div class="playerbaseRewardCenter glow-on-hover"
+                                                    id="playerbaseRewardCenter_button">
+                                                    <img src="assets/img/bronze_chest.png" id=""
+                                                        class="smallChestIconRewardCenter">
+                                                    <span
+                                                        class="notificationRewardCenterButton unseen-count-animation hidden"
+                                                        id="notificationRewardCenterButton"></span>
+                                                </div>
+                                                <div class="playerbaseGiftCodeCenter glow-on-hover"
+                                                    id="playerbaseGiftCodeCenter_button">
+                                                    <img src="assets/img/GiftCodeCoupon.png" id=""
+                                                        class="smallChestIconRewardCenter">
+                                                    <span
+                                                        class="notificationRewardCenterButton unseen-count-animation hidden"
+                                                        id=""></span>
+                                                </div>
+                                                <div class="playerbaseLeagueLeaderboardCenter glow-on-hover"
+                                                    id="playerbaseLeaguesCenter_button">
+                                                    <img src="assets/img/league_rankings.png" id=""
+                                                        class="smallChestIconRewardCenter">
+                                                    <span
+                                                        class="notificationRewardCenterButton unseen-count-animation hidden"
+                                                        id="notificationLeagueCenterButton"></span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p id="displayProgress" class="smallText unselectable"
+                                                    style="display: none;">Level progress: 10%</p>
+                                                <p id="displayHighscore" class="smallText unselectable"
+                                                    style="display: none;">Last Score: 0</p>
+                                                <p id="gloobixAccountUsername" class="info-small-menu unselectable"></p>
+                                                <button id="gloobix_account_login_button"
+                                                    class="gloobixAccountLoginUsingDiscord glow-on-hover">Log-in using
+                                                    Discord</button>
+                                                <button id="gloobix_account_login_button_google"
+                                                    class="gloobixAccountLoginUsingGoogle glow-on-hover">Log-in using
+                                                    Google</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p></p>
+                                    <div id="xpProgress">
+                                        <div id="xpProgressBar"
+                                            class="progress-bar progress-bar-success progress-bar-striped active pr1">
+                                            <span class="fa fa-star checked fa-3x lvlstardisplay">
+                                                <span class="lvldisplay unselectable" id="level">2
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="account_loading" style="display: none;">
+                                    <div class="center menu_account_loading_center">
+                                        <div class="lds-ripple">
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="UserContainer-other">
+                                <div class="horizontalAlignment">
+                                    <div>
+                                        <button id="freeCoinsButton" class="freeCoinsButton glow-on-hover">Free
+                                            Coins</button>
+                                        <div id="countdown" class="freeCoinsTimer"></div>
+                                    </div>
+                                    <button id="gameshopMenuButton" class="gameshopMenuButton glow-on-hover" onclick=""
+                                        style="display: block">Game Shop</button>
+                                    <!-- <button class="skinsButton" onclick="openSkinsList()">Skin Gallery</button> -->
+                                    <!-- <button class="settingsButton" onclick="showSettings()">Settings</button> -->
+                                    <button id="tourneyModesButton" class="settingsButton hidden" onclick=""
+                                        style="display: none;">Tourneys</button>
+                                    <button id="partyMenuButton" class="settingsButton" onclick=""
+                                        style="display: none">Party Menu</button>
+                                    <button id="skinShopButton" class="settingsButton glow-on-hover" onclick="">Skin
+                                        Shop</button>
+                                </div>
+                            </div>
+                            <div class="UserContainer-events">
+                                <div>
+                                    <!-- <p class="info">OnGoing Events</p> -->
+                                    <!-- <a href="https://forms.gle/zdjQLRETywk7tVnC9" target="_blank"
+                                        class="center promoText">Month #1 Community Clips</a>
+                                    <img class="center promoImage" src="assets/img/week_1.gif"> -->
+                                    <br>
+                                    <!-- <p class="info-verySmall">Season #2 Ending in July 2022! </p> -->
+
+                                    <!-- <p class="info-verySmall">Season #2 Ending in December 2023! </p>
+                                    <a href="https://forms.gle/ctBRAesNyGNE1jbg8" target="_blank"
+                                        class="center promoText_smaller" style="color: aliceblue;">Season #2 Community Clips</a>
+                                    <img class="center promoImage_smaller" src="assets/img/contestWinner1.gif"> -->
+                                    <p class="info-verySmall">Submit your clips now for the contest!</p>
+                                    <a href="https://forms.gle/mx66bSPupRQC2ULF6" target="_blank"
+                                        class="center promoText_smaller animated_rainbow_1"
+                                        style="color: aliceblue; border-radius: 20px;">Community Clips
+                                        (SEASON 2)</a>
+                                    <!-- <img class="center promoImage_smaller" src="assets/img/gifs/GloObixContest1_Winner.gif"> -->
+                                    <video class="center promoImage_smaller" autoplay="" loop="" muted="" playsinline=""
+                                        style="height: 250px; border-radius: 20px;">
+                                        <source src="assets/img/videos/gloobix.mp4" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+
+
+                                    <br><br>
+                                    <!-- <p class="info-verySmall">Check out the latest community content! </p> -->
+                                    <!-- <iframe width="232" height="125" src="https://www.youtube.com/embed/roy7pc-rd5o?rel=0&mute=1&showinfo=0&autoplay=1&controls=0&modestbranding=1&showsearch=0&loop=1" frameborder="0" allow="autoplay" allowfullscreen style="margin-left: 30px;">
+                                    </iframe> -->
+                                    <!-- <iframe width="232" height="125" src="https://www.youtube.com/embed/Q7NchCyp8P4?rel=0&mute=1&showinfo=0&autoplay=1&controls=0&modestbranding=1&showsearch=0&loop=1" frameborder="0" allow="autoplay" allowfullscreen style="margin-left: 30px;">
+                                    </iframe> -->
+
+
+
+
+                                    <!-- <div id="youtubePromo">
+                                        <p class="info-verySmall">Check out the latest community content! </p>
+                                        <iframe id="videoIframe" width="232" height="125" frameborder="0" allow="autoplay" allowfullscreen style="margin-left: 30px;"></iframe>
+                                        <script>
+                                            var iframe = document.getElementById('videoIframe');
+                                            iframe.src = "https://www.youtube.com/embed/" + video_token + "?rel=0&mute=1&showinfo=0&autoplay=1&controls=0&modestbranding=1&showsearch=0&loop=1";
+                                        </script>
+                                    </div> -->
+                                    <div id="potionContainer" class="potionContainer" style="display: block;">
+                                        <div id="rowPotionContainer" class="horizontalAlignment">
+                                            <div id="potion_holder_1" class="potionHolder glow-on-hover">
+                                                <div id="potionIcon1" class="potion_exotic"></div>
+                                                <span id="potionSpan1" class="potionSpan">Exotic</span>
+                                            </div>
+                                            <div id="potion_holder_2" class="potionHolder_DEV glow-on-hover">
+                                                <div id="potionIcon2" class="potion_common"></div>
+                                                <span id="potionSpan2" class="potionSpan">Common</span>
+                                            </div>
+                                            <div id="potion_holder_3" class="potionHolder glow-on-hover">
+                                                <div id="potionIcon3" class="potion_exotic"></div>
+                                                <span id="potionSpan3" class="potionSpan">Exotic</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="menuContainer space-cadet spacing">
+                    <div class="UserContainer-play">
+                        <p class="game-title unselectable animated_rainbow_1">Gloobix.io Web</p>
+                        <div class="playContainer border space-cadet">
+                            <div class="flax">
+                                <div class="boxContainer">
+                                    <input type="text" class="textbox space-cadet border largespacing"
+                                        placeholder="Username" id="nick">
+                                    <input type="text" class="textbox space-cadet border largespacing"
+                                        placeholder="Skin" id="skin" oninput="skincamb()"
+                                        style="color: rgb(85, 85, 85);">
+                                    <input type="text" class="textbox space-cadet border largespacing partyFriendInput"
+                                        placeholder="Add Party Friend" id="partyFriendAdd"><button
+                                        class="partyFriendAdder glow-on-hover" id="partyFriendAddBtn">+</button>
+                                </div>
+                                <div class="skinPickerButton glow-on-hover">
+                                    <img class="currentSkin" id="currentSkin" width="80" height="80"
+                                        src="assets/img/no.png" onclick="openSkinsList()">
+                                </div>
+                            </div>
+                            <div class="seperatorh"></div>
+                            <div class="flax menuPlayButtons">
+                                <!-- <div class="fas fa-play button border" id="play-btn"></div> -->
+
+                                <button id="playButto" class="playButto glow-on-hover"
+                                    style="display: block">Play</button>
+
+                                <!-- <div class="fas fa-play button border playbtn_remastered" id="play-btn"><span class="main_play_span"> Play</span></div> -->
+                                <button id="spectateButton" class="spectateButton glow-on-hover" onclick="spectate()"
+                                    style="display: block">Spectate</button>
+
+
+                                <button id="settingsButto" class="settingsButto glow-on-hover" onclick="showSettings()"
+                                    style="display: block">Settings</button>
+                            </div>
+                        </div><br>
+                        <p class="text-muted center Negative5px">Move your <b class="lookBetter">mouse</b> to
+                            control
+                            your cell</p>
+                        <p class="text-muted center Negative5px">Press <b class="lookBetter">Space</b> to split</p>
+                        <p class="text-muted center Negative5px">Press <b class="lookBetter">W</b> to eject some
+                            mass
+                        </p>
+                    </div>
+                    <div class="UserContainer-ads">
+                        <div class="ads-main">
+                            <div style="height: 100%; width: 100%">
+                                <div style="width: 100%; height: 100%">
+                                    <div id="gloobix-pro_300x250" style="margin-left: -10px;">
+                                        <script type="text/javascript">
+                                            aiptag.cmd.display.push( function ()
+                                            {
+                                                aipDisplayTag.display( "gloobix-pro_300x250" );
+                                            } );
+                                        </script>
+                                        <span><span id="JKIWbnm4PHDj_1754695236336_176156009_16" data-google-query-id=""
+                                                style="pointer-events: auto; visibility: visible; line-height: 0; display: none;">
+                                                <div id="google_ads_iframe_/421469808,22513198280/gloobix.pro_300x250_8__container__"
+                                                    style="border: 0pt none; width: 300px; height: 0px;"></div>
+                                            </span></span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="menuContainer space-cadet spacing">
+                    <div class="UserContainer-gamemodes">
+
+                        <div class="horizontalAlignment">
+                            <div id="selectedGamemode1" class="item selectedGamemode"
+                                onclick="window.selectModeById('ffa'); cleanSelect(); this.classList.add('selectedGamemode')">
+                                <img id="gamemode1" src="assets/img/ffa.png" class="gamemodeAvatar">
+                                <span class="animated_rainbow_1" style="display: block;padding: 2px;">FFA&nbsp;
+                                    <!-- <span class="newBadge">&nbsp;UPDATED&nbsp;</span> --></span>
+                                <span id="PartyClassic_icon" class="gamemodeIcon" style="display: block;">🔥</span>
+                            </div>
+                            <div id="selectedGamemode2" class="item"
+                                onclick="window.selectModeById('teams'); cleanSelect(); this.classList.add('selectedGamemode')">
+                                <img id="gamemode2" src="assets/img/partyModeExp.png" class="gamemodeAvatar">
+                                <span class="animated_rainbow_1" style="display: block;padding: 2px;">Teams&nbsp;</span>
+                                <!-- <span class="eventBadge">&nbsp; EVENT &nbsp;</span> -->
+                                <!-- <span class="gamemodeText">Party Mode Big Bots</span> -->
+                                <span id="BigBots_icon" class="gamemodeIcon" style="display: none;"></span>
+                            </div>
+                            <div id="selectedGamemode3" class="item"
+                                onclick="window.selectModeById('selfeed'); cleanSelect(); this.classList.add('selectedGamemode')">
+                                <img id="gamemode3" src="assets/img/partyModeSelfeed.png" class="gamemodeAvatar">
+                                <span class="animated_rainbow_1"
+                                    style="display: block;padding: 2px;">Selfeed&nbsp;<!-- <span class="newBadge2">&nbsp;SEASONAL&nbsp;</span> --></span>
+                                <!-- <span class="eventBadge">&nbsp; EVENT &nbsp;</span> -->
+                                <span id="PartyMaxisplit_icon" class="gamemodeIcon" style="display: none;"></span>
+                            </div>
+                            <div id="selectedGamemode4" class="item"
+                                onclick="window.selectModeById('experimental'); cleanSelect(); this.classList.add('selectedGamemode')">
+                                <img id="gamemode4" src="assets/img/partyModeClassic.png" class="gamemodeAvatar">
+                                <span class="animated_rainbow_1" style="display: block;padding: 2px;">Experimental&nbsp;
+                                    <!-- <span class="newBadge">&nbsp;UPDATED&nbsp;</span> --></span>
+                                <!-- <span class="gamemodeText">Party Mode Megasplit</span> -->
+                                <span id="Megasplit_icon" class="gamemodeIcon" style="display: block;">🍹</span>
+                            </div>
+                        </div>
+                        <div class="horizontalAlignment">
+                            <div id="selectedGamemode5" class="item"
+                                onclick="window.selectModeById('megasplit'); cleanSelect(); this.classList.add('selectedGamemode')">
+                                <img id="gamemode5" src="assets/img/partyModeMegasplit.png" class="gamemodeAvatar">
+                                <span class="animated_rainbow_1" style="display: block;padding: 2px;">Megasplit&nbsp;
+                                    <!-- <span class="newBadge">&nbsp;UPDATED&nbsp;</span> <span class="newBadge2">Updating🛠️</span> <!-- <span class="newBadge">&nbsp;EVENT&nbsp;</span> --></span>
+                                <!-- <span class="eventBadge">&nbsp; EVENT &nbsp;</span> -->
+                                <span id="BigBotsExperimental_icon" class="gamemodeIcon" style="display: none;"></span>
+                            </div>
+                            <div id="selectedGamemode6" class="item"
+                                onclick="window.selectModeById('ghost'); cleanSelect(); this.classList.add('selectedGamemode')">
+                                <img id="gamemode6" src="assets/img/ffa.png" class="gamemodeAvatar">
+                                <span class="animated_rainbow_1" style="display: block;padding: 2px;">Ghost&nbsp;</span><!--<span class="newBadge"
+                                        style="font-size: 11px;">&nbsp;SEASONAL&nbsp;</span>-->
+                                <span id="FFABoosters_icon" class="gamemodeIcon" style="display: none;"></span>
+                            </div>
+                            <!-- <div id="selectedGamemode6" class="item"
+                                onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode')">
+                                <img id="gamemode6" src="assets/img/ffa.png" class="gamemodeAvatar">
+                                <span class="gamemodeText">FFA Boosters</span>
+                                <span id="FFABoosters_icon" class="gamemodeIcon"></span>
+                            </div> -->
+                            <!--<div id="selectedGamemode7" class="item"
+                                onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode')">
+                                <img id="gamemode7" src="assets/img/scrimmage1v1.png" class="gamemodeAvatar">
+                                <span class="gamemodeText">Scrims 1v1 <span class="newBadge"> (Closed) </span></span>
+                            </div> -->
+                            <!-- <div id="selectedGamemode7" class="item" onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode')">
+                                <img id="gamemode7" src="assets/img/scrimmage1v1.png" class="gamemodeAvatar">
+                                <span class="gamemodeText">Old Party Mode</span>
+                            </div> -->
+                            <div id="selectedGamemode7" class="item"
+                                onclick="window.selectModeById('minions'); cleanSelect(); this.classList.add('selectedGamemode')">
+                                <img id="gamemode7" src="assets/img/scrimmage1v1.png" class="gamemodeAvatar">
+                                <span class="animated_rainbow_1"
+                                    style="display: block;padding: 2px;">Minions&nbsp;</span><!--<span
+                                        class="newBadge2">&nbsp;ABILITIES&nbsp;</span>--><!-- <span class="newBadge">&nbsp;NEW MODE&nbsp;</span> -->
+                                <!-- Maxisplit x32  --><!-- <span class="newBadge">&nbsp;UPDATED&nbsp;</span> --><!-- <span class="newBadge2">&nbsp;OFFLINE for&nbsp; &nbsp;&nbsp;&nbsp;update&nbsp;🛠️&nbsp;&nbsp;</span> --></span>
+                                <!-- <span class="eventBadge">&nbsp;NEW&nbsp;x32&nbsp;</span> -->
+                                <span id="teamsmode_icon" class="gamemodeIcon" style="display: none;"></span>
+                            </div>
+                            <!-- <div id="selectedGamemode8" class="item"
+                                onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode'); sendServerCode(-1)">
+                                <img id="gamemode8" src="assets/img/partyModeMegasplitOld.png"
+                                    class="gamemodeAvatar">
+                                <span class="gamemodeText"><span class="newBadge2">&nbsp;Offline for&nbsp; &nbsp;update🛠️</span></span>
+                                <span id="teamsmode_icon" class="gamemodeIcon"></span>
+                            </div> -->
+                            <div id="selectedGamemode8" class="item"
+                                onclick="window.selectModeById('imvirus'); cleanSelect(); this.classList.add('selectedGamemode')">
+                                <img id="gamemode8" src="assets/img/partyModeMegasplitOld.png" class="gamemodeAvatar">
+                                <span class="gamemodeText"
+                                    style="font-size: 11px;"><!-- Selfeed Abilities --></span><span
+                                    class="animated_rainbow_1"
+                                    style="display: block;padding: 2px;">Im&nbsp;Virus&nbsp;+</span><!--<span
+                                        class="newBadge">&nbsp;SEASONAL&nbsp;</span><!-- <span class="newBadge">&nbsp;OLD MODE&nbsp;</span> --><!-- <span class="newBadge2">&nbsp;Offline for&nbsp; &nbsp;update🛠️</span> --><!-- <span class="newBadge2">PRERELEASE</span> --></span>
+                                <span id="selfeed_icon" class="gamemodeIcon" style="display: none;"></span>
+                                <!--<span id="" class=""
+                                    style="display: none;position: absolute;top: 1px;left: 1px;">🍹</span>
+                                <span id="seasonal_gamemode_countdown" class="seasonal_gamemode_countdown">⌛23d
+                                    6h</span>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="UserContainer-party">
+                        <div id="tourneyModesContainer" class="horizontalAlignment" style="display: none">
+                            <div id="selectedGamemode9" class="item-1"
+                                onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode'); sendServerCode(-1)">
+                                <img id="gamemode9" src="assets/img/scrimmage1v1FFA.png" class="gamemodeAvatar">
+                                <span class="gamemodeText">Scrimmage 1v1 FFA</span>
+                            </div>
+                            <div id="selectedGamemode10" class="item"
+                                onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode'); sendServerCode(-1)">
+                                <img id="gamemode10" src="assets/img/scrimmage1v1EXP.png" class="gamemodeAvatar">
+                                <span class="gamemodeText">Scrimmage 1v1 EXP</span>
+                            </div>
+                            <div id="selectedGamemode11" class="item"
+                                onclick="setserver('localhost:3004'); cleanSelect(); this.classList.add('selectedGamemode'); sendServerCode(-1)">
+                                <img id="gamemode11" src="assets/img/scrimmage2v2.png" class="gamemodeAvatar">
+                                <span class="gamemodeText">Scrimmage 2v2</span>
+                            </div>
+                            <div id="selectedGamemode12" class="item"
+                                onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode'); sendServerCode(-1)">
+                                <img id="gamemode12" src="assets/img/scrimmage2v2v2.png" class="gamemodeAvatar">
+                                <span class="gamemodeText">Scrimmage 2v2v2</span>
+                            </div>
+                        </div>
+                        <div id="partyStuff" class="horizontalAlignment" style="display: flex">
+                            <div id="partyContainer1" class="horizontalAlignment">
+                                <button id="createParty" class="createPartyButton glow-on-hover" onclick="">Create
+                                    Party</button>
+                                <button id="JoinParty" class="joinPartyButton glow-on-hover" onclick="">Join
+                                    Party</button>
+                            </div>
+
+                            <div id="partyContainer3" class="horizontalAlignment" style="display: none">
+                                <input class="partyInput" id="partyModeInput">
+                                <button id="partyMenuButtonJoin" class="joinPartyButton" onclick="">Join
+                                    Server</button>
+                            </div>
+                            <div id="partyContainer4" class="horizontalAlignment" style="display: none">
+                                <p class="partySuccessText" id="partyInfo">An Error Occured!</p>
+                                <button id="copyParty" class="copyPartyBtn" onclick="">Copy
+                                </button>
+                                <button id="leaveParty" class="leavePartyBtn" onclick="">Leave
+                                </button>
+                            </div>
+                            <div id="partyContainer5" class="horizontalAlignment" style="display: none">
+                                <p class="partyErrorText" id="partyInfoError">An Error Occured!</p>
+                                <div>
+                                    <p class="partyErrorText2" id="partyInfoError2">You cannot create a party for
+                                        this
+                                        server.</p>
+                                    <button id="leaveErroredParty" class="exitErroredPartyBtn" onclick="">Exit
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="partyContainer6" class="horizontalAlignment" style="display: none">
+                                <p class="partyErrorText" id="partyInfoError">An Error Occured!</p>
+                                <div>
+                                    <p class="partyErrorText2" id="partyInfoError2">The party you tried joining
+                                        doesnt
+                                        exist !</p>
+                                    <button id="leaveErroredParty2" class="exitErroredPartyBtn" onclick="">Exit
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="partyContainer7" class="horizontalAlignment" style="display: none">
+                                <p target="_blank" class="partyFooterText">Joining Party...</p>
+                                <img class="center createPartyImage" src="assets/img/gifs/PartyAnimation.gif"
+                                    id="partyAnimationCells2">
+                            </div>
+                            <div id="partyContainer8" class="horizontalAlignment" style="display: none">
+                                <p class="partySuccessText" id="partyInfoJoined">An Error Occured!</p>
+                                <button id="copyParty2" class="copyPartyBtn" onclick="">Copy
+                                </button>
+                                <button id="leaveParty2" class="leavePartyBtn" onclick="">Leave
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="UserContainer-promo">
+                        <!-- <div
+                            onclick="setserver('localhost:443'); cleanSelect(); document.getElementById('selectedGamemode5').classList.add('selectedGamemode')">
+                            <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoContent02.png">
+                        </div> -->
+                        <!-- <div onclick="window.open('https://youtu.be/NPGxHMZEkAw','_blank')">
+                            <img id="PromoContent" class="center promoImagePromotions" src="assets/img/communityClips1.jpg">
+                            <p class="info">Season #1 is Over</p>
+                            <p class="info-verySmall">Thanks for taking part of it this event !</p>
+                        </div> -->
+                        <div onclick="showNewsPopup()" style="display:none">
+                            <br>
+                            <p class="info-verySmall">Squid Game x GloObix.Io</p>
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoImageSquidGame.jpg" style="margin-top: -1px;"> -->
+                            <p class="info-verySmall">&nbsp;</p>
+                            <p class="info-verySmall">Try these new fresh skins!</p>
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div>
+                        <div onclick="" style="display:none">
+                            <br>
+                            <p class="info-verySmall">Sing 2 x GloObix.Io</p>
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/Sing2xGloobixSkinRelease.jpg" style="margin-top: -1px;"> -->
+                            <p class="info-verySmall">&nbsp;</p>
+                            <p class="info-verySmall">Try these new fresh skins!</p>
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div>
+                        <div id="stpatrickeventday" onclick="startDailyQuest('patrickday')" style="display:none">
+                            <br>
+                            <p class="info-verySmall">St Patrick's Week-end!</p>
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoStPatrick.jpg" style="margin-top: -1px;"> -->
+                            <p class="info-verySmall">&nbsp;</p>
+                            <p class="info-verySmall">Celebrate St Patrick's day with these Exclusive week-end
+                                quests!
+                            </p>
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div>
+                        <div id="stpatrickeventday" onclick="startDailyQuest('patrickday')" style="display:none">
+                            <br>
+                            <p class="info-verySmall">Easter Egg Week-end!</p>
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoEaster.jpg" style="margin-top: -1px;"> -->
+                            <p class="info-verySmall">&nbsp;</p>
+                            <p class="info-verySmall">Celebrate Easter day with these Exclusive week-end quests!</p>
+                            <p class="info-verySmall">Only for Party Mode Big Bots!</p>
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div>
+                        <div id="bigbotsMOREBOTSEVENT" onclick="" style="display:none">
+                            <p class="info-verySmall">Big Bots Week-Event!</p>
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoBigbots.jpg" style="margin-top: -1px;"> -->
+                            <p class="info-verySmall">&nbsp;</p>
+                            <p class="info-verySmall">All players are getting +25% bots!</p>
+                            <p class="info-verySmall">Only for Party Mode Big Bots!</p>
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div>
+                        <div id="bigbotsMOREBOTSEVENT" onclick="" style="display:none">
+                            <p class="info-verySmall">Classic Party Week EVENT!</p>
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoClassicParty.png" style="margin-top: -1px;"> -->
+                            <p class="info-verySmall">&nbsp;</p>
+                            <p class="info-verySmall">All players are getting +25% bots, and +25% Mass Boosters!
+                                Event
+                                LIVE for 7 days!</p>
+                            <p class="info-verySmall">Only for Party Mode Classic! (Hard Difficulty)</p>
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div>
+                        <div id="" onclick="" style="display:none">
+                            <br>
+                            <p class="info">St Patrick's Week-end!</p>
+                            <p class="info-verySmall">&nbsp;</p>
+                            <p class="info-verySmall">Celebrate St Patrick's day with exclusive week-end quests!</p>
+                            <p class="info-verySmall"></p>
+                            <p class="info-verySmall">Complete the quest to earn a special EVENT SKIN!</p>
+                            <p class="info-verySmall"></p>
+                            <p class="info-verySmall">Event starting in few hours!</p>
+                            <p class="info">Starting very soon!</p>
+                            <p class="info-verySmall"></p>
+                        </div>
+                        <div onclick="" style="display:none;padding-top: 5px;" class="glow-on-hover">
+                            <!-- <br> -->
+                            <!-- <p class="info-verySmall">Coming Very Soon</p> -->
+                            <p class="info-verySmall">Click to join this 9th birthday event!</p>
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/EventOnline.png" style="margin-top: -1px;" onclick="setserver('localhost:443')"> -->
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/EventOnline.png" style="margin-top: -1px;" onclick="window.open('https://discord.gg/7RgaKwUnyM')"> -->
+                            <p class="info-verySmall">&nbsp;</p>
+                            <!-- <p class="info-verySmall">December, 1st: GloObix.Io Winter Season Edition</p>
+                            <p class="info-verySmall">December, 4th: Gloobix or Party Mode Event ( <a target="_blank" href="https://discord.gg/z3smvNZd7n">Link</a> )</p> -->
+                            <!-- <p class="info-verySmall">Saturday, 22th: Gloobix GloObix.Io Event ( <a target="_blank" href="https://discord.gg/z3smvNZd7n">Link</a> )</p> -->
+                            <p class="info-verySmall">Sunday, 28th: Gloobix Domination Event ( <a target="_blank"
+                                    href="https://discord.gg/7RgaKwUnyM">Link</a> )</p>
+                            <p class="info-verySmall">Participation reward: 500 to 2500 coins for everyone!</p>
+                            <p class="info-verySmall">Prize pool of 15000 GloObix Coins in total</p>
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div>
+                        <div onclick="" style="display:none">
+                            <br>
+                            <p class="info-verySmall">Our Discord Servers: </p>
+                            <p class="info-verySmall">Click to join!</p>
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/discordPromotion.gif" style="margin-top: -1px;" onclick="window.open('https://discord.com/invite/5gXJaJQ')"> -->
+                            <p class="info-verySmall">&nbsp;</p>
+                            <p class="info-verySmall">Chat with other members!</p><br>
+                            <p class="info-verySmall">Official GloObix.Io Server ( News, <a target="_blank"
+                                    href="https://discord.gg/z3smvNZd7n">Link</a> )</p>
+                            <p class="info-verySmall">Official Gloobix Community Server ( Active, <a target="_blank"
+                                    href="https://discord.gg/7RgaKwUnyM">Link</a> )</p><br>
+                            <p class="info-verySmall">Don't forget to submit your Community Clips!</p>
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div>
+                        <!-- <div onclick="" style='display:block'> 
+                            <br>
+                            <img id="PromoContent" class="center promoImagePromotionsSponsor" src="assets/img/sponsor.png" style="margin-top: -1px;" onclick="window.open('https://bit.ly/ps5gloobixgiveaway')">
+                            
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div>  -->
+                        <!-- <div onclick="" style='display:block'> 
+                            <br>
+                            <img id="PromoContent" class="center promoImagePromotionsSponsor" src="assets/img/selfeed_update.png" style="margin-top: -1px;" onclick="setserver('localhost:443'); cleanSelect(); document.getElementById('selectedGamemode3').classList.add('selectedGamemode')">
+                            
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div> -->
+
+
+                        <div id="promoOtherContent" style="display: block">
+                            <p class="info animated_rainbow_1">GloObix.io Satisfaction Survey</p>
+                            <p class="info-verySmall">Send your feedback directly to our developers!</p>
+                            <video class="center" autoplay="" loop="" muted="" playsinline=""
+                                style="height: 250px;max-height: 145px;margin-left: 20px;border: 2px solid #f9939300;border-radius: 20px;"
+                                onclick="window.open(`https://forms.gle/ju9pKEpxpCDN23Gh9`)">
+                                <source src="assets/img/videos/GloobixDev.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <span
+                                style="position: absolute;display: block;margin-top: -40px;margin-left: 115px;background-color: #ff858554;padding: 2px;border-radius: 20px;border: 1px solid #f79a9a;"
+                                onclick="window.open(`https://forms.gle/ju9pKEpxpCDN23Gh9`)">click here</span>
+                        </div>
+                        <!-- </div> -->
+                        <!-- <div onclick="showEventPopup()" style='display:none'>
+                            <br>
+                            <p class="info-verySmall">GloObix.Io Winter Season Event</p>
+                            <img id="PromoContent" class="center promoImagePromotions" src="assets/img/gloobixWinterEvent.jpg" style="margin-top: -1px;">
+                            <p class="info-verySmall">&nbsp;</p>
+                            <p class="info-verySmall">Complete 24 quests to unlock a MYSTERY SKIN</p>
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div> -->
+                        <div onclick="window.open('https://discord.com/invite/5gXJaJQ')" style="display:true"
+                            target="_blank">
+                            <br>
+                            <!-- <p class="info-verySmall">New Year Giveaways!</p> -->
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/newyear2022.jpg" style="margin-top: -1px;">
+                            <p class="info-verySmall">&nbsp;</p>
+                            <p class="info-verySmall">Join our discord servers!</p>
+                            <p class="info-verySmall">The giveaways has ended! Thanks for participating!</p> -->
+                            <!-- <div style="display: inline-flex;flex-direction: row;justify-content: center;align-items: center;">
+                                <p>GloObix.Io: </p>
+                                <img src="assets/img/logo-discord.png" id="discordBtn1" class="btnDiscord" name="https://discord.gg/484szvX" onclick="window.open(this.name)" style="height: 20px; width: 20px;"> </img>
+                            </div>
+                            <div style="display: inline-flex;flex-direction: row;justify-content: center;align-items: center;">
+                                <p> Gloobix Community: </p>
+                                <img src="assets/img/logo-discord.png" id="discordBtn2" class="btnDiscord" name="https://discord.gg/hRgZQTW9De" onclick="window.open(this.name)" style="height: 20px; width: 20px;"> </img>
+                            </div> -->
+                            <p class="info"></p>
+                            <p class="info-verySmall"></p>
+                        </div>
+                    </div>
+
+
+
+
+                    <!-- <div class="gamemodesDisplay"> -->
+                    <!-- <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont15"
+                            onclick="setserver('localhost:443')">
+                            <span class="newBadgePink">POPULAR</span> SELFEED<img class="img-gamemodes-gloobix"
+                                src="assets/img/crazyselfeed.png" />
+                        </button>
+                        <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont13"
+                            onclick="setserver('localhost:443')">
+                            <span class="newBadgePink">POPULAR</span> MEGASPLIT
+                            <img class="img-gamemodes-gloobix" src="assets/img/megasplit.png" />
+                        </button>
+                        <!-- <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont13"
+                            onclick="setserver('localhost:443')">
+                            <span class="newBadge">NEW</span>
+                            PRIV. PARTY<img class="img-gamemodes-gloobix" src="assets/img/megasplit.png" />
+                        </button> -->
+                    <!--<button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont15"
+                            onclick="setserver('localhost:443')">
+                            PARTY BIG BOTS<img class="img-gamemodes-gloobix" src="assets/img/party.png" />
+                        </button>
+                        <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont11"
+                            onclick="setserver('localhost:443')">
+                            <span class="newBadgePink">&nbsp;UPDATED&nbsp;</span> PARTY MODE<img class="img-gamemodes-gloobix"
+                                src="assets/img/party.png" />
+                        </button>
+                        <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont15"
+                            onclick="setserver('localhost:443')">
+                            FFA Boosters<img class="img-gamemodes-gloobix" src="assets/img/party.png" />
+                        </button>
+                        <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont15"
+                            onclick="setserver('localhost:443')">
+                            BETA 1v1 SCRIMS<img class="img-gamemodes-gloobix" src="assets/img/1v1.png" />
+                        </button>
+                        <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont11"
+                            onclick="setserver('localhost:443')">
+                            OLD PARTY MODE<img class="img-gamemodes-gloobix" src="assets/img/party.png" />
+                        </button>
+                        <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont13"
+                            onclick="setserver('localhost:443')">
+                            PARTY MEGASPLIT<img class="img-gamemodes-gloobix" src="assets/img/megasplit.png" />
+                        </button>
+
+                        <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont11"
+                            onclick="setserver('localhost:443')"><span class="newBadge">NEW</span>
+                            PARTY EXP BOTS<img class="img-gamemodes-gloobix" src="assets/img/selfeed.png" />
+                        </button>
+                        <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont13"
+                            onclick="setserver('localhost:443')">
+                            INSTANT MERGING<img class="img-gamemodes-gloobix" src="assets/img/instant.png" />
+                        </button>
+
+                        <div class="gamemodeSelector" onclick="this.classList.add('expand')">
+                            <div class="from">
+                                <div class="from-contents">
+                                    <div class="name">Tournament Modes 🏆</div>
+                                </div>
+                            </div>
+                            <div class="to">
+                                <div class="to-contents">
+                                    <div class="top">
+                                        <div class="avatar-large me"></div>
+                                        <div class="name-large">Select Gamemode</div>
+                                        <div class="x-touch"
+                                            onclick="document.querySelector('.gamemodeSelector').classList.remove('expand'); event.stopPropagation();">
+                                            <div class="x">
+                                                <div class="line1"></div>
+                                                <div class="line2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bottom">
+                                        <br>
+                                        <div class="row">
+                                            <div class="link">
+                                                <button
+                                                    class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
+                                                    onclick="setserver('localhost:443')">
+                                                    1V1#1 FFA TOURNEY<img class="img-gamemodes-gloobix"
+                                                        src="assets/img/1v1.png" />
+                                                </button>
+                                                <button
+                                                    class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
+                                                    onclick="setserver('localhost:443')">
+                                                    1V1#2 FFA TOURNEY<img class="img-gamemodes-gloobix"
+                                                        src="assets/img/1v1.png" />
+                                                </button>
+                                                <button
+                                                    class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
+                                                    onclick="setserver('localhost:443')">
+                                                    1V1#3 FFA TOURNEY<img class="img-gamemodes-gloobix"
+                                                        src="assets/img/1v1.png" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <br><br>
+                                        <div class="row">
+                                            <div class="link">
+                                                <button
+                                                    class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
+                                                    onclick="setserver('localhost:443')">
+                                                    1V1#1 EXP TOURNEY<img class="img-gamemodes-gloobix"
+                                                        src="assets/img/1v1megasplit.png" />
+                                                </button>
+                                                <button
+                                                    class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
+                                                    onclick="setserver('localhost:443')">
+                                                    1V1#2 EXP TOURNEY<img class="img-gamemodes-gloobix"
+                                                        src="assets/img/1v1megasplit.png" />
+                                                </button>
+                                                <button
+                                                    class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
+                                                    onclick="setserver('localhost:443')">
+                                                    1V1#3 EXP TOURNEY<img class="img-gamemodes-gloobix"
+                                                        src="assets/img/1v1megasplit.png" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <br><br>
+                                        <div class="row">
+                                            <div class="link">
+                                                <button
+                                                    class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
+                                                    onclick="setserver('localhost:443')">
+                                                    2v2 TOURNEY<img class="img-gamemodes-gloobix"
+                                                        src="assets/img/2v2.png" />
+                                                </button>
+                                                <button
+                                                    class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
+                                                    onclick="setserver('localhost:443')">
+                                                    2v2V2 TOURNEY<img class="img-gamemodes-gloobix"
+                                                        src="assets/img/2v2v2.png" />
+                                                </button>
+                                                <button
+                                                    class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
+                                                    onclick="setserver('localhost:443')">
+                                                    CRAZY SELFEED<img class="img-gamemodes-gloobix"
+                                                        src="assets/img/crazyselfeed.png" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                    <!-- </div> -->
+                </div>
+            </div>
+
+            <!-- <div id="leftOptions" class="leftOptions">
+                
+            </div>
+            <div id="helloDialog" style="min-width: 301px">
+                <div style="height: 50%">
+                    <div class="form-group">
+                        <h1 id="title" style="margin: 0; /* height: 9%; */">
+                            Gloobix.io web
+                        </h1>
+                    </div>
+                    <div id="play-style-menu" class="play-style-menu-div" style="transform: scale(0.8); /* height: 20%; */">
+                        <input  class="form-control zindex" placeholder="Nickname" maxlength="17" />
+                        <button  class="play-btn-pc">
+                            <span>Play</span>
+                        </button>
+                    </div>
+
+                    <button id="show-settings-menu-btn" class="btn btn-play btn-primary btn-needs-server btn-info glyphicon glyphicon-cog" ></button>
+                    <button id="spectate-btn"  class="btn btn-warning btn-spectate btn-needs-server glyphicon glyphicon-eye-open"></button>
+                    <button id="gallery-btn"  class="btn btn-play btn-primary btn-needs-server btn-info glyphicon glyphicon-picture"></button>
+                    <input  class="form-control" placeholder="Skin Name" style="color: rgb(120, 255, 57)" />
+                    <div id="settings" class="checkbox">
+                        <div style="margin: 6px" class="control-group"></div>
+                        <table style="width: 100%"></table>
+                    </div>
+                    <hr />
+                </div>
+                <div id="footer" style="height: 50%">
+                    <p>advertisement</p>
+
+                </div>
+            </div>
+            <div id="rightOptions" class="rightOptions">
+                <div style="height: 100%" id="gamemode">
+                    <center style="
+                /* display: flex; */
+                /* justify-content: space-evenly; */
+                /* width: 20%; */
+                /* height: 40%; */
+                height: 100%;
+                width: 100%;
+              ">
+                     
+        </center>
+    </div>
+    </div> -->
+
+            <div id="ads-bottom" style="position: fixed;left: 50%;z-index: 3000;bottom: 0;transform: translateX(-50%);">
+                <!-- <div id="gloobix-pro_728x90_2" style="display: block;width: 320px; height:100px;"> -->
+                <div id="gloobix-pro_728x90_2" style="display: block;">
+                    <!-- <script data-cfasync="false" type="text/javascript">
+                    (window.vw = Math.max(
+                        document.documentElement.clientWidth || 0,
+                        window.innerWidth || 0
+                    )),
+                        (window.vh = Math.max(
+                            document.documentElement.clientHeight || 0,
+                            window.innerHeight || 0
+                        ));
+                    if (vw >= 1150 && vh >= 600)
+                        aiptag.cmd.display.push(function () {
+                            aipDisplayTag.display("gloobix-pro_728x90_2");
+                        });
+                </script> -->
+                    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2209798905657072" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-2209798905657072" data-ad-slot="1110754691"></ins>
+                <script>
+                   try {
+                    document.addEventListener('readystatechange', event => { 
+                        if (event.target.readyState === "complete") {
+                            setTimeout(function() {
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            }, 5000);
+                        }
+                    });
+                   } catch (e) {
+                    console.log(e);
+                   }
+                </script> -->
+                    <!-- <div onclick="window.open('https://discord.gg/ERyY85BFG3')" style="display: block;">
+                    <h2 class="center text-muted">GloObix.io x Gloobix Community</h2>
+                    <p class="center text-muted">Join the 5th Anniversary Events! Click here to join</p>
+                    <img src="assets/img/GloobixCom5thBdayEvents.gif">
+                </div> -->
+                    <!-- <div id="bottom_news" onclick="window.open('https://discord.com/invite/7RgaKwUnyM')" style="display: none;" class="glow-on-hover">
+                    <img src="assets/img/Gloobixcommunity9thbdayevent2.gif">
+                </div> -->
+                    <div id="bottom_news" onclick="showSeasonPass()" style="display: block;" class="glow-on-hover">
+                        <!-- <h2 class="center text-muted">GloObix.io x Gloobix Community</h2>
+                    <p class="center text-muted">Join the event! Click here to join</p> -->
+                        <!-- <img src="assets/img/gifs/2025JulyUpdate.gif"> -->
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!--  WINTER  -->
+
+
+            <div class="snowflakes" aria-hidden="true" style="display: none;">
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❄</div>
+            </div>
+
+            <!--  WINTER END  -->
+
+            <!-- <div class="DiscordBtnPosition horizontalAlignment">
+            <div onclick="window.open('https://discord.gg/Gloobix-community-agar-io-more-5-years-already-450232713429909514')"
+                style="cursor: pointer;">
+                <span class="discordGloobixCommunity">Gloobix Community</span>
+                <img src="assets/img/logo-discord.png" id="discordBtn" class="btnDiscord fixSC_DCbtn"
+                    name="https://discord.gg/Gloobix-community-agar-io-more-5-years-already-450232713429909514"
+                    onclick="window.open(this.name)">
+            </div>
+
+            <div style="cursor: pointer;">
+                <span class="discordgloobix">Gloobix.io</span>
+                <img src="assets/img/logo-discord.png" id="discordBtn" class="btnDiscord fixISP_DCbtn"
+                    name="https://discord.gg/yh5DESB" onclick="window.open(this.name)">
+            </div>
+
+            <img src="assets/img/logo-reddit.png" id="redditBtn" class="btnDiscord"
+                name="https://www.reddit.com/r/GloobixCommunity/" onclick="window.open(this.name)"
+                style="margin-left: 2px; cursor: pointer;">
+
+            <img src="assets/img/logo-googleplay.png" id="redditBtn" class="btnDiscord"
+                name="https://play.google.com/store/apps/details?id=com.gloobixmobile" onclick="window.open(this.name)"
+                style="margin-left: 2px; cursor: pointer;">
+
+        </div>-->
+        </div>
+
+        <div id="connecting" style="transition: opacity 0.5s; opacity: 1;">
+            <div id="connecting-content">
+                <h2 style="color: black;">Connecting...</h2>
+                <p style="color: black;">
+                    If you cannot connect to the servers, check if you have some anti
+                    virus or firewall blocking the connection.
+                    The servers can also be under maintenance or update, or just offline.
+                    Try again later if it still doesn't work after reloading.
+                </p>
+            </div>
+        </div>
+
+        <div id="mobileStuff" style="display: none">
+            <div id="joystick">
+                <div id="joystick-handle"></div>
+                <div id="touchpad"></div>
+                <div id="touchCircle" style="display: none"></div>
+                <img src="assets/img/split.png" id="splitBtn">
+                <img src="assets/img/eject.png" id="ejectBtn">
+                <img src="assets/img/splitBot.png" id="splitBotBtn">
+                <img src="assets/img/ejectBot.png" id="ejectBotBtn">
+            </div>
+            <!--     <canvas
+        style="font-family: 'Ubuntu'; position: fixed; left: 50%; bottom: 20px; transform: translate(-50%, -50%); margin: 0 auto;">
+        <p>BETA UPDATE UNDER WORK</p>
+    </canvas> -->
+            <!-- <div
+        style="font-family: 'Ubuntu'; position: fixed; left: 50%; bottom: 20px; transform: translate(-50%, -50%); margin: 0 auto;">
+        <p>BETA UPDATE UNDER WORK</p>
+    </div> -->
+            <div style="font-family: 'Ubuntu'">&nbsp;</div>
+            <!--
+                <script>
+                    if ( typeof BlockAdBlock !== typeof undefined )
+                    {
+                        blockAdBlock = new BlockAdBlock( {
+                            checkOnLoad: true,
+                            resetOnEnd: true,
+                            baitClass: "pub_300x250 pub_300x250m pub_728x90 text-ad textAd text_ad text_ads text-ads text-ad-links ads-right ads-left ads-bottom ads-top ads",
+                            baitStyle: "width: 1px !important; height: 1px !important; position: absolute !important; left: -10000px !important; top: -1000px !important;",
+                        } );
+                    }
+                    let adBlockDetected = () =>
+                    {
+                        document.body.innerHTML =
+                            '<style>html,body{margin:0;padding:0;font-family:sans-serif;font-size:100%}.adblock-wrapper{position:absolute;box-sizing:border-box;height:250px;width:650px;margin:auto;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-family:sans-serif;padding:50px;border-radius:15px}.left{float:left;padding:20px}.adblock-image{display:inline-block;background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzNDAiIGhlaWdodD0iMzQwIiB2aWV3Qm94PSIwIDAgMTcwIDE3MCI+ICA8bWV0YWRhdGE+PD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz48eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjYtYzEzOCA3OS4xNTk4MjQsIDIwMTYvMDkvMTQtMDE6MDk6MDEgICAgICAgICI+ICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIi8+ICAgPC9yZGY6UkRGPjwveDp4bXBtZXRhPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPD94cGFja2V0IGVuZD0idyI/PjwvbWV0YWRhdGE+PGRlZnM+ICAgIDxzdHlsZT4gICAgICAuY2xzLTEgeyAgICAgICAgZmlsbDogI2U3MWQzNjsgICAgICAgIGZpbGwtcnVsZTogZXZlbm9kZDsgICAgICB9ICAgIDwvc3R5bGU+ICA8L2RlZnM+ICA8cGF0aCBpZD0iXzQiIGRhdGEtbmFtZT0iNCIgY2xhc3M9ImNscy0xIiBkPSJNMzk3Ljc0Miw0MTYuMjU4YTIuNzQyLDIuNzQyLDAsMCwwLDIuNzQyLTIuNzQydi0yNC44YTYuMzYyLDYuMzYyLDAsMCwxLDEuODczLTQuNTI1bDMyLjM4NC0zMi4zODRhMi43NDIsMi43NDIsMCwxLDAtMy44NzctMy44NzhsLTMyLjM4NSwzMi4zODRhMTEuODEzLDExLjgxMywwLDAsMC0zLjQ3OSw4LjR2MjQuOEEyLjc0MiwyLjc0MiwwLDAsMCwzOTcuNzQyLDQxNi4yNThaTTU2MS41MiwzODAuMzExbC00Mi44MzEtNDIuODNhMTEuOCwxMS44LDAsMCwwLTguNC0zLjQ4MUg0ODcuMzEyYTIuNzQyLDIuNzQyLDAsMCwwLDAsNS40ODRoMjIuOTc0YTYuMzU5LDYuMzU5LDAsMCwxLDQuNTI1LDEuODc0bDQyLjgzMSw0Mi44MzFhNi4zNTksNi4zNTksMCwwLDEsMS44NzQsNC41MjV2NjAuNTcyYTYuMzYyLDYuMzYyLDAsMCwxLTEuODczLDQuNTI1TDUxNC44MSw0OTYuNjQyYTYuMzU1LDYuMzU1LDAsMCwxLTQuNTI0LDEuODc0SDQ0OS43MTRhNi4zNTksNi4zNTksMCwwLDEtNC41MjUtMS44NzRsLTQyLjgzMS00Mi44MzFhNi4zNTksNi4zNTksMCwwLDEtMS44NzQtNC41MjVWNDMyLjAyNGEyLjc0MiwyLjc0MiwwLDEsMC01LjQ4NCwwdjE3LjI2MmExMS44MSwxMS44MSwwLDAsMCwzLjQ4LDguNGw0Mi44MzEsNDIuODNhMTEuOCwxMS44LDAsMCwwLDguNCwzLjQ4MWg2MC41NzJhMTEuOCwxMS44LDAsMCwwLDguNC0zLjQ4MWw0Mi44MzMtNDIuODNhMTEuODEzLDExLjgxMywwLDAsMCwzLjQ3OS04LjRWMzg4LjcxNEExMS44MSwxMS44MSwwLDAsMCw1NjEuNTIsMzgwLjMxMVptLTExNS4wNDgsNjAuMjdhMzQuNTcsMzQuNTcsMCwwLDAsMzQuNiwzNC4xNzIsMzQuMiwzNC4yLDAsMCwwLDM0LjMtMzQuMywxLjc0LDEuNzQsMCwwLDAtLjAzOS0wLjM3YzAuMDM3LTEwLjE2NSwwLTQyLjgsMC00My4xMjVhOC4xMiw4LjEyLDAsMCwwLTguMDc0LTguMzM2SDUwNy4yM2E4LjI2OSw4LjI2OSwwLDAsMC00LjgxLDEuNTM5di03LjQ0NWE4LjI5MSw4LjI5MSwwLDAsMC0yLjM2Ni01Ljg3Miw4LjE1MSw4LjE1MSwwLDAsMC01LjgzNy0yLjQ2NGgtMC4wMzRhOC4xODgsOC4xODgsMCwwLDAtNC43NjQsMS41MjV2LTIuNDkyYTguMyw4LjMsMCwwLDAtOC4yNjktOC4zMzZoLTAuMDM0YTguMzU2LDguMzU2LDAsMCwwLTguMzcyLDguMjc2djIuNDVhOC4xOSw4LjE5LDAsMCwwLTQuNzM1LTEuNTI5aC0wLjAzNGE4LjM4LDguMzgsMCwwLDAtOC40Miw4LjI3NnYxOC4zODlhOC4yNDksOC4yNDksMCwwLDAtNC43NzEtMS41NEg0NTQuNzVhOC4zMiw4LjMyLDAsMCwwLTguMyw4LjI3OWMwLDAuMjI4LjAzOSwyMi45MTksMCwzMi42MTZBMS43MzQsMS43MzQsMCwwLDAsNDQ2LjQ3Miw0NDAuNTgxWm00Mi45NDctNTcuOTJhNC44LDQuOCwwLDAsMSw0Ljc4NC00Ljc4Myw0LjY3Miw0LjY3MiwwLDAsMSwzLjM0OCwxLjQxMSw0LjgyLDQuODIsMCwwLDEsMS4zNjksMy40MTh2MzUuMjI2bC05LjUtLjAzVjM4Mi42NjFaTTQ1NC43Nyw0MDIuOWE0LjgxNSw0LjgxNSwwLDAsMSw0Ljc4NSw0Ljc3NXYyNy4wMzVhMS43NTEsMS43NTEsMCwwLDAsMS43NDQsMS43NSwxNy44OTEsMTcuODkxLDAsMCwxLDEyLjgwNSw1LjQsMTguMjY5LDE4LjI2OSwwLDAsMSw1LjIyMiwxMi45NSwxLjc1LDEuNzUsMCwwLDAsMy41LjAxNEEyMS43NSwyMS43NSwwLDAsMCw0NzYuNiw0MzkuNGEyMS4zNCwyMS4zNCwwLDAsMC0xMy41NDgtNi4zNzFWMzgyLjU1NUE0LjkzNiw0LjkzNiwwLDAsMSw0NjgsMzc3Ljc3MmE0LjgsNC44LDAsMCwxLDQuNzQ5LDQuNzc0djIzLjA0N2ExLjc1MSwxLjc1MSwwLDAsMCwzLjUsMFYzNzMuMzU4YTQuODUsNC44NSwwLDAsMSw0Ljg5MS00Ljc4Miw0LjgsNC44LDAsMCwxLDQuNzgyLDQuODI3djQ0LjQ4OGwtOS42NzMtLjAzMXYtNS4yNjZhMS43NTEsMS43NTEsMCwxLDAtMy41LDB2NS4yNTZMNDcxLDQxNy44NDRhMS43NTIsMS43NTIsMCwwLDAtMS43NTYsMS43NDVjMCwwLjAzNywwLC4wNzQsMCwwLjExMWExLjc0OSwxLjc0OSwwLDAsMCwxLjc0LDEuNjQ0bDI5LjQ4NCwwLjA5NGExLjg0NCwxLjg0NCwwLDAsMCwuMi4wMTIsMS42ODMsMS42ODMsMCwwLDAsLjE4OS0wLjAxMWwzLjMwNiwwLjAxMWExLjc1LDEuNzUsMCwxLDAsLjAxMS0zLjVsLTEuNzU2LS4wMDZWMzk2LjlhNC44MjEsNC44MjEsMCwwLDEsNC44My00Ljc4Myw0LjY2LDQuNjYsMCwwLDEsNC41ODcsNC44MzFjMCwwLjE5NC4wMTQsMTEuNDIzLDAuMDE3LDIyLjc0OSwwLDguMywwLDE2LjY0NC0uMDE3LDIwLjc0NGExLjc3MywxLjc3MywwLDAsMCwuMDM5LjM3MiwzMC45NTUsMzAuOTU1LDAsMCwxLTYxLjktLjUxNywxLjY1MiwxLjY1MiwwLDAsMC0uMDIyLTAuMjc0YzAuMDM4LTkuODU3LDAtMzIuMTI5LDAtMzIuMzQ1QTQuODE1LDQuODE1LDAsMCwxLDQ1NC43Nyw0MDIuOVoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0zOTUgLTMzNCkiLz48L3N2Zz4=);width:145px;height:107px;background-size:93px 93px;background-repeat:no-repeat;background-position:center}.right a.refresh{display:inline-block;background-color:#800059;padding:10px;cursor:pointer;margin-right:23px;color:white;border-radius:5px;text-decoration:none}.right a.disable{display:inline-block;padding:9px;border:1px solid rgba(256,256,256,.4);border-radius:5px;margin-left:20px;color:white;text-decoration:none}.right a.disable:hover{border:1px solid white}.right p{font-size:0.8em}.close{position:absolute;display:block;cursor:pointer;top:8px;right:6px;font-size:1.2em}#main-wrapper{width:100%;height:100vh;overflow:hidden;background:rgba(0,0,0,.95)!important}.fa{margin-right:15px}@media(max-width:768px){.adblock-wrapper{max-width:417px}}</style><div id="main-wrapper"><div class="adblock-wrapper"id="adblock-wrapper"><div class="left"><div class="adblock-image"></div></div><div class="right"><h3>Attention!Ad blocker Detected!</h3><p>Please disable your adblocking software or whitelist our website. To keep the website alive, we see us forced to disallow adblockers, sorry ;C.</p><a onClick="window.location.reload()"class="refresh"><i class="fa fa-refresh"></i>Refresh</a><a href="https://www.google.co.in/search?q=how+to+disable+adblock"target="_blank"class="disable"><i class="fa fa-power-off"></i>How to Disable</a></div><div class="close"id="myBtn"><i class="fa fa-times"></i></div></div></div><script>document.getElementById("myBtn").addEventListener("click",function(){var close=document.getElementById("adblock-wrapper");var mainWrapper=document.getElementById("main-wrapper");fadeOut(close,1000);fadeOut(mainWrapper,1000)});function fadeOut(elem,speed){if(!elem.style.opacity){elem.style.opacity=1}var outInterval=setInterval(function(){elem.style.opacity-=0.02;if(elem.style.opacity<=0){clearInterval(outInterval)}},speed/50)}"';
+                    };
+                    if ( typeof BlockAdBlock === "undefined" || blockAdBlock == false )
+                    {
+                        adBlockDetected();
+                    } else
+                    {
+                        blockAdBlock.onDetected( adBlockDetected );
+                    }
+                </script>-->
+
+            <style>
+                .gamemodeIcon {
+                    display: none;
+                    position: absolute;
+                    top: 1px;
+                    left: 1px;
+                }
+            </style>
+
+</body>
+
+</html>

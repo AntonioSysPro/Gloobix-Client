@@ -1,0 +1,21 @@
+#joystick {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    width: 71px;
+    height: 71px;
+    background: rgba(128, 128, 128, 0.5);
+    border-radius: 50%;
+    z-index: 10;
+}
+
+#joystick-handle {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 40px;
+    height: 40px;
+    background: rgba(163, 161, 161, 0.7);
+    border-radius: 50%;
+    z-index: 11;
+}
