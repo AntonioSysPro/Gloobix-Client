@@ -796,7 +796,7 @@ var settings = {
   backgroundSectors: false,
   jellyPhysics: true,
   animationDelay: 165,
-  drawNamesDistance: 1,
+  drawNamesDistance: 20000,
 };
 var pressed = {
   " ": false,
@@ -814,11 +814,11 @@ var foodSound = new Sound( "./assets/sound/food.mp3", 0.5, 10 );
 
 
 // Cargar skins normales
-request( "assets/txt Skins/skinList.txt", function ( data )
+request( "./assets/txt-Skins/skinList.txt", function ( data )
 {
   if ( !data )
   {
-    console.error( "No se pudo cargar assets/txt Skins/skinList.txt o está vacío" );
+    console.error( "No se pudo cargar ./assets/txt-Skins/skinList.txt o está vacío" );
     return;
   }
 
@@ -850,12 +850,12 @@ request( "assets/txt Skins/skinList.txt", function ( data )
 
 // Cargar skins de youtubers
 request(
-  "assets/txt Skins/youtuberskinList.txt",
+  "./assets/txt-Skins/youtuberskinList.txt",
   function ( data )
   {
     if ( !data )
     {
-      console.error( "No se pudo cargar assets/txt Skins/youtuberskinList.txt o está vacío" );
+      console.error( "No se pudo cargar ./assets/txt Skins/youtuberskinList.txt o está vacío" );
       return;
     }
     var skins = data.split( "," );
@@ -984,7 +984,7 @@ function buildGallery ()
   {
     var name = sortedKeys[ i ];
     c += '<li class="skin" onclick="changeSkin(\'' + name + "')\">";
-    c += '<img class="circular" src="./assets/skins/' + name + '.png">';
+    c += '<img class="circular" src="assets/skins/' + name + '.png">';
     c += '<h4 class="skinName">' + name + "</h4>";
     c += "</li>";
   }
@@ -1016,7 +1016,7 @@ function showYoutuberSkins ()
   {
     var name = sortedKeys[ i ];
     c += `<li class="skin" onclick="changeSkin('${ name }')">`;
-    c += `<img class="circular" src="./assets/skins/${ name }.png">`;
+    c += `<img class="circular" src="/assets/skins/${ name }.png">`;
     c += `<h4 class="skinName">${ name }</h4>`;
     c += '</li>';
   }
@@ -1396,7 +1396,7 @@ function drawFondo ()
   {
     if ( !window._fondoImagen )
     {
-      const rutaImagen = './assets/skins/no.png';
+      const rutaImagen = 'https://gloobix-io.onrender.com/web/assets/skins/no.png';
       window._fondoImagen = new Image();
       window._fondoImagen.src = rutaImagen;
 
@@ -1943,7 +1943,7 @@ Cell.prototype = {
   {
     if ( this.s < 20 || this.jagged ) return;
     var y = this.y;
-    let range = document.getElementById( 'drawNamesDistance' ).value || 1; // how far to zoom out from the cell before hiding names and mass
+    let range = settings.drawNamesDistance//document.getElementById( 'drawNamesDistance' ).value || 1; // how far to zoom out from the cell before hiding names and mass
     if ( this.name && settings.showNames && this.viewRange < range )
     {
       drawText(
@@ -2783,13 +2783,13 @@ function init ()
       nameElem.textContent = user.displayName || user.email || 'Usuario';
       const imavatar = '';
       if ( user.photoURL ) { imavatar = user.photoURL }
-      else { 'assets/img/favicon.png' }
+      else { './assets/img/favicon.png' }
       avatarElem.src = imavatar;
       avatarElem.style.display = 'inline';
     } else if ( nameElem && avatarElem )
     {
       nameElem.textContent = '';
-      avatarElem.src = 'assets/img/favicon.png';
+      avatarElem.src = './assets/img/favicon.png';
       avatarElem.style.display = 'none';
     }
   }

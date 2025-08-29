@@ -6,42 +6,50 @@ html {
   margin: 0;
   /* background: #290661; */
   overflow: hidden;
+  user-select: none;
 }
 
 .navbar {
   background: #140330;
   padding: 0 !important;
+  user-select: none;
 }
 
 .nav-link,
 .navbar-brand {
   color: #fff;
   cursor: pointer;
+  user-select: none;
 }
 
 .navbar-brand-img {
   border: 0;
   border-radius: 100%;
+  user-select: none;
 }
 
 .nav-link {
   border-radius: 15px;
   margin-right: 1em !important;
+  user-select: none;
 }
 
 .nav-link:hover {
   color: #000;
   border-radius: 15px;
+  user-select: none;
 
   background: #5bf210;
 }
 
 .navbar-collapse {
   justify-content: flex-end;
+  user-select: none;
 }
 
 .header {
   position: relative;
+  user-select: none;
 }
 
 .active {
@@ -51,7 +59,7 @@ html {
 .bg {
   height: 100%;
   width: 100%;
-  background-image: url("/bg.png");
+  background-image: url("/gloobix/bg.png");
   background-size: cover;
   background-position: center;
   position: absolute;
@@ -86,28 +94,35 @@ html {
 
 .description h1 {
   color: #5bf210;
+  user-select: none;
 }
 
 .description p {
   color: #000;
   font-size: 1.3rem;
   line-height: 1.5;
+  user-select: none;
+}
+
+a, a.navbar {
+  user-select: none;
 }
 
 .description a {
   border-radius: 15px;
   border: 1px solid #5bf210;
   background: #5bf210;
-  color: #fff;
+  color: #ff00d4;
   margin: 5px;
   text-decoration: none;
 }
 
 .description a:hover {
   border: 1px solid #000;
-  background: #fff;
-  color: #000;
+  background: #14e9de;
+  color: #c8ff00;
   text-decoration: none;
+  scale: 1.2;
 }
 
 @media (max-width: 550px),

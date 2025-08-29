@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -13,35 +13,35 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>GLOOBIX.IO WEB - Juego multijugador tipo Agar.io gratis y online</title>
-    <link id="favicon" rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link id="favicon" rel="icon" type="image/png" href="./assets/img/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:700" rel="stylesheet" type="text/css">
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/index.css" rel="stylesheet">
-    <link href="assets/css/joystick.css" rel="stylesheet">
-    <link href="assets/css/gallery.css" rel="stylesheet">
-    <link href="assets/css/exp.css" rel="stylesheet">
-    <link href="assets/css/gamemodes.css" rel="stylesheet">
-    <link href="assets/css/menu.css" rel="stylesheet">
-    <link href="assets/css/recording.css" rel="stylesheet">
-    <link href="assets/css/recordings.css" rel="stylesheet">
-    <script src="../js/jquery.min.js"></script>
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./assets/css/index.css" rel="stylesheet">
+    <link href="./assets/css/joystick.css" rel="stylesheet">
+    <link href="./assets/css/gallery.css" rel="stylesheet">
+    <link href="./assets/css/exp.css" rel="stylesheet">
+    <link href="./assets/css/gamemodes.css" rel="stylesheet">
+    <link href="./assets/css/menu.css" rel="stylesheet">
+    <link href="./assets/css/recording.css" rel="stylesheet">
+    <link href="./assets/css/recordings.css" rel="stylesheet">
+    <script src="./js/jquery.min.js"></script>
 
-    <script src="assets/js/quadtree.js"></script>
+    <script src="./assets/js/quadtree.js"></script>
     <!-- Firebase debe inicializarse antes de cualquier uso -->
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore-compat.js"></script>
     <!-- Firebase client configuration and user service -->
-    <script src="assets/js/firebase-config.js"></script>
-    <script src="assets/js/userService.js"></script>
-    <script src="assets/js/auth.js"></script>
-    <script src="assets/js/main_out.js"></script>
+    <script src="./assets/js/firebase-config.js"></script>
+    <script src="./assets/js/userService.js"></script>
+    <script src="./assets/js/auth.js"></script>
+    <script src="./assets/js/main_out.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <script src="assets/js/blocker.js"></script>
-    <script src="assets/js/gamechat.js"></script>
-    <script src="assets/js/initial_setup.js"></script>
-    <script src="assets/js/modes-client.js"></script>
+    <script src="./assets/js/blocker.js"></script>
+    <script src="./assets/js/gamechat.js"></script>
+    <script src="./assets/js/initial_setup.js"></script>
+    <script src="./assets/js/modes-client.js"></script>
     <script>
         // Optional: point this to a remote modes service (JSON array) hosted on Render.
         // Example: window.MODES_SERVICE_URL = 'https://my-render-service.onrender.com/modes'
@@ -272,7 +272,7 @@
                 canvas.height = window.innerHeight;
             } );
             // legacy: set default server host:port used by the game logic
-            setserver( "https:" == window.location.protocol ? 'gloobix-io.onrender.com:443' : 'localhost:443' );
+            setserver( "https:" == window.location.protocol ? 'gloobix-ffa.onrender.com:443' : 'localhost:443' );
         } );
     </script>
 
@@ -385,9 +385,9 @@
                             type="checkbox">
                         <div class="control_indicator"></div>
                     </label>
-                    <center><span id="nameDistance">Draw Names Distance</span></center>
-                    <input id="drawNamesDistance" type="range" value="2400" step="1" min="1" max="2400"
-                        style="width: 100%; height: 30px" onchange="setDrawNameDistance($(this).val());"><br>
+                    <!--<center><span id="nameDistance">Draw Names Distance</span></center>
+                    <input id="drawNamesDistance" type="range" value="2400" step="1" min="1" max="24000"
+                        style="width: 100%; height: 30px" onchange="setDrawNameDistance($(this).val());"><br>-->
                     <!-- <center><span id="borderDistance">Draw Borders Distance</span></center>
                     <input id="drawBorderDistance" type="range" value="120" step="1" min="1" max="240" style="width: 100%; height: 30px" onchange="setDrawBorderDistance($(this).val());" /><br /> -->
                     <div id="logout_div" class="center" style="display: none;">
@@ -517,7 +517,7 @@
                 <span class="">GloObix Shop</span>
                 <div id="" class="unselectable gameshopCoinContainer">
                     <div class="horizontalAlignment">
-                        <img src="./assets/img/coin.png" id="" class="coin_img" style="width: 16px;">
+                        <img src="././assets/img/coin.png" id="" class="coin_img" style="width: 16px;">
                         <div id="gameshop_coin_amount" class="tokens_container">0</div>
                     </div>
                 </div>
@@ -541,29 +541,29 @@
                     </div>
                     <div id="botPackagesContainer" class="gameshopBotPackagesContainer horizontalAlignment">
                         <div id="2xBots" class="verticalAlignment gameshopPackages">
-                            <img src="./assets/img/shopBotPackageSmall.png" class="gameshopBoosterImages unselectable" />
+                            <img src="././assets/img/shopBotPackageSmall.png" class="gameshopBoosterImages unselectable" />
                             <span class="gameshopBoosterTitle unselectable">+20% Minions</span>
                             <div class="gameshopIndividualPackage">
-                                <div>1 hour <span>(<img src="./assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">350)</span></div>
+                                <div>1 hour <span>(<img src="././assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">350)</span></div>
                                 <button id="shopminions1" class="gameshopBuySmall">buy</button>
                                 <span id="shopminionsnotif1" class=""></span>
                             </div>
                             <div class="gameshopIndividualPackage">
-                                <div>24 hours <span>(<img src="./assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">495)</span></div>
+                                <div>24 hours <span>(<img src="././assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">495)</span></div>
                                 <button id="shopminions2" class="gameshopBuySmall">buy</button>
                                 <span id="shopminionsnotif2" class=""></span>
                             </div>
                         </div>
                         <div id="3xBots" class="verticalAlignment gameshopPackages">
-                            <img src="./assets/img/shopBotPackageLarge.png" class="gameshopBoosterImages unselectable" />
+                            <img src="././assets/img/shopBotPackageLarge.png" class="gameshopBoosterImages unselectable" />
                             <span class="gameshopBoosterTitle unselectable">+70% Minions</span>
                             <div class="gameshopIndividualPackage">
-                                <div>1 hour <span>(<img src="./assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">650)</span></div>
+                                <div>1 hour <span>(<img src="././assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">650)</span></div>
                                 <button id="shopminions3" class="gameshopBuyLarge">buy</button>
                                 <span id="shopminionsnotif3" class=""></span>
                             </div>
                             <div class="gameshopIndividualPackage">
-                                <div>24 hours <span>(<img src="./assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">950)</span></div>
+                                <div>24 hours <span>(<img src="././assets/img/coin.png" id="" class="" style="width: 12px;padding-bottom: 2px;">950)</span></div>
                                 <button id="shopminions4" class="gameshopBuyLarge">buy</button>
                                 <span id="shopminionsnotif4" class=""></span>
                             </div>
@@ -572,46 +572,46 @@
                             <!-- <span class="blackfriday_promo">BLACK FRIDAY DEALS AVAILABLE</span> -->
     <!--<div class="shopBundleContainer">
                                 <h5 class="shopItemTitles">Small Coins Bundle</h5>
-                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">2500</span>
+                                <span class="shopCoinDescriptionholder">Get <img src="././assets/img/coin.png" id="" class="shopCoinDescription">2500</span>
                                 <button id="buy-bundle-01" class="shopPayButtons">1.99€</button>
                             </div>
                             <div class="shopBundleContainer">
                                 <h5 class="shopItemTitles">Medium Coins Bundle</h5>
-                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">4000</span>
+                                <span class="shopCoinDescriptionholder">Get <img src="././assets/img/coin.png" id="" class="shopCoinDescription">4000</span>
                                 <button id="buy-bundle-02" class="shopPayButtons">2.99€</button>
                             </div>
                             <div class="shopBundleContainer">
                                 <h5 class="shopItemTitles">Classic Coins Bundle</h5>
-                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">15000</span>
+                                <span class="shopCoinDescriptionholder">Get <img src="././assets/img/coin.png" id="" class="shopCoinDescription">15000</span>
                                 <button id="buy-bundle-03" class="shopPayButtons">9.99€</button>
                             </div>
                             <div class="shopBundleContainer">
                                 <h5 class="shopItemTitles">Maxi Coins Bundle</h5>
-                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">25000</span>
+                                <span class="shopCoinDescriptionholder">Get <img src="././assets/img/coin.png" id="" class="shopCoinDescription">25000</span>
                                 <button id="buy-bundle-04" class="shopPayButtons">14.99€</button>
                             </div>
                             <div class="shopBundleContainer">
                                 <h5 class="shopItemTitles">MEGA Coins Bundle</h5>
-                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">100000</span>
+                                <span class="shopCoinDescriptionholder">Get <img src="././assets/img/coin.png" id="" class="shopCoinDescription">100000</span>
                                 <button id="buy-bundle-05" class="shopPayButtons">49.99€</button>
                             </div>
                             <div class="shopBundleContainer hidden">
                                 <h5 class="shopItemTitles">BlackFriday Medium Coins Bundle</h5>
-                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">50000</span>
+                                <span class="shopCoinDescriptionholder">Get <img src="././assets/img/coin.png" id="" class="shopCoinDescription">50000</span>
                                 <button id="buy-bundle-06" class="shopPayButtons_small"><span class="gameShopOldPrice">29.99</span> 19.99€</button>
-                                <img src="./assets/img/icons/hotdeal.png" id="" class="gameShopHotDeal"/>
+                                <img src="././assets/img/icons/hotdeal.png" id="" class="gameShopHotDeal"/>
                             </div>
                             <div class="shopBundleContainer hidden">
                                 <h5 class="shopItemTitles">BlackFriday Large Coins Bundle</h5>
-                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">100000</span>
+                                <span class="shopCoinDescriptionholder">Get <img src="././assets/img/coin.png" id="" class="shopCoinDescription">100000</span>
                                 <button id="buy-bundle-07" class="shopPayButtons_small"><span class="gameShopOldPrice">49.99</span> 34.99€</button>
-                                <img src="./assets/img/icons/hotdeal.png" id="" class="gameShopHotDeal"/>
+                                <img src="././assets/img/icons/hotdeal.png" id="" class="gameShopHotDeal"/>
                             </div>
                             <div class="shopBundleContainer hidden">
                                 <h5 class="shopItemTitles">BlackFriday GIANT Coins Bundle</h5>
-                                <span class="shopCoinDescriptionholder">Get <img src="./assets/img/coin.png" id="" class="shopCoinDescription">150000</span>
+                                <span class="shopCoinDescriptionholder">Get <img src="././assets/img/coin.png" id="" class="shopCoinDescription">150000</span>
                                 <button id="buy-bundle-08" class="shopPayButtons_small"><span class="gameShopOldPrice">79.99</span> 49.99€</button>
-                                <img src="./assets/img/icons/hotdeal.png" id="" class="gameShopHotDeal"/>
+                                <img src="././assets/img/icons/hotdeal.png" id="" class="gameShopHotDeal"/>
                             </div>
                         </div>
                     </div>
@@ -644,7 +644,7 @@
                 <span class="">GloObix Skin Shop</span>
                 <div id="" class="unselectable gameshopCoinContainer">
                     <div class="horizontalAlignment">
-                        <img src="./assets/img/coin.png" id="" class="coin_img" style="width: 16px;">
+                        <img src="././assets/img/coin.png" id="" class="coin_img" style="width: 16px;">
                         <div id="gameshop_skins_coin_amount" class="tokens_container">0</div>
                     </div>
                 </div>
@@ -739,7 +739,7 @@
             </div>
             <div id="giftcodes-body" class="modalGiftCodesBody verticalAlignment">
                 <span id="skinShopPurchaseModalFooter" class="skinShopPurchaseModalFooter unselectable">Got any gift code? Use it there in time to collect great prizes before it runs out of uses!</span>
-                <img src="./assets/img/icons/GiftCodeBanner.png" id="" class="modalGiftCodesBanner">
+                <img src="././assets/img/icons/GiftCodeBanner.png" id="" class="modalGiftCodesBanner">
                 <input type="text" class="textbox space-cadet border giftCodeInput" placeholder="Gift code" id="gloobixGiftCodeInput" />
                 <button class="giftCodeButtonClaim" id="giftCodeButtonClaim">Claim Rewards</button>
             </div>
@@ -763,7 +763,7 @@
                 <span class="">GloObix Quest Center</span>
                 <div id="" class="unselectable gameshopCoinContainer">
                     <div class="horizontalAlignment">
-                        <img src="./assets/img/coin.png" id="" class="coin_img" style="width: 16px;">
+                        <img src="././assets/img/coin.png" id="" class="coin_img" style="width: 16px;">
                         <div id="gameshop_quests_coin_amount" class="tokens_container">0</div>
                     </div>
                 </div>
@@ -783,24 +783,24 @@
                         </div>
                         <div class="horizontalAlignment">
                             <span id="questbadgeperso3_description" class="questbadgeperso3_description hidden">
-                                <img src="./assets/img/chests/bronze_chest.png" id="" class="smallChestIcon">
+                                <img src="././assets/img/chests/bronze_chest.png" id="" class="smallChestIcon">
                                 <br/>Solo Bronze Chest<br/>
-                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 50-150<br/>
-                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 1-2
+                                <img src="././assets/img/coin.png" id="" class="shopCoinDescription"> 50-150<br/>
+                                <img src="././assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 1-2
                             </span>
                             <span class="questbadgeperso3" id="questbadgeperso3">3</span>
                             <span id="questbadgeperso5_description" class="questbadgeperso5_description hidden">
-                                <img src="./assets/img/chests/silver_chest.png" id="" class="smallChestIcon">
+                                <img src="././assets/img/chests/silver_chest.png" id="" class="smallChestIcon">
                                 <br/>Solo Silver Chest<br/>
-                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 100-250<br/>
-                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 2-3
+                                <img src="././assets/img/coin.png" id="" class="shopCoinDescription"> 100-250<br/>
+                                <img src="././assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 2-3
                             </span>
                             <span class="questbadgeperso5" id="questbadgeperso5">5</span>
                             <span id="questbadgeperso7_description" class="questbadgeperso7_description hidden">
-                                <img src="./assets/img/chests/gold_chest.png" id="" class="smallChestIcon">
+                                <img src="././assets/img/chests/gold_chest.png" id="" class="smallChestIcon">
                                 <br/>Solo Gold Chest<br/>
-                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 200-400<br/>
-                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 3-5
+                                <img src="././assets/img/coin.png" id="" class="shopCoinDescription"> 200-400<br/>
+                                <img src="././assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 3-5
                             </span>
                             <span class="questbadgeperso7" id="questbadgeperso7">7</span>
                         </div>
@@ -813,7 +813,7 @@
                             <span id="personal_chest_opened_span" class="quest_center_opened_span" style="display: none;margin-top: -50px;">No Chest</span>
                             <div id="personal_quest_opened_container_1" class="horizontalAlignment">
                                 <div id="personal_quest_coins_1" class="questCenterVerticalDisplay" style="display: none;">
-                                    <img class="rewardCoinsSmall" src="./assets/img/icons/GloObixCoins.png">
+                                    <img class="rewardCoinsSmall" src="././assets/img/icons/GloObixCoins.png">
                                     <span class="quest_center_skin_span" id="quest_center_coins_personal_span_1"><b>0</b> coins</span>
                                 </div>
                                 <div id="personal_quest_skins_1_1" style="display: none;" class="questskinreward">
@@ -840,45 +840,45 @@
                         </div>
                         <div class="horizontalAlignment">
                             <span id="questbadgepublic10_description" class="questbadgepublic10_description hidden">
-                                <img src="./assets/img/chests/iron_chest.png" id="" class="smallChestIcon">
+                                <img src="././assets/img/chests/iron_chest.png" id="" class="smallChestIcon">
                                 <br/>Iron Chest<br/>
-                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 50-150<br/>
-                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 1-2
+                                <img src="././assets/img/coin.png" id="" class="shopCoinDescription"> 50-150<br/>
+                                <img src="././assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 1-2
                             </span>
                             <span class="questbadgepublic10" id="questbadgepublic10">10</span>
                             <span id="questbadgepublic25_description" class="questbadgepublic25_description hidden">
-                                <img src="./assets/img/chests/bronze_chest.png" id="" class="smallChestIcon">
+                                <img src="././assets/img/chests/bronze_chest.png" id="" class="smallChestIcon">
                                 <br/>Bronze Chest<br/>
-                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 150-200<br/>
-                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 2-4
+                                <img src="././assets/img/coin.png" id="" class="shopCoinDescription"> 150-200<br/>
+                                <img src="././assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 2-4
                             </span>
                             <span class="questbadgepublic25" id="questbadgepublic25">25</span>
                             <span id="questbadgepublic50_description" class="questbadgepublic50_description hidden">
-                                <img src="./assets/img/chests/silver_chest.png" id="" class="smallChestIcon">
+                                <img src="././assets/img/chests/silver_chest.png" id="" class="smallChestIcon">
                                 <br/>Silver Chest<br/>
-                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 250-300<br/>
-                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 3-5
+                                <img src="././assets/img/coin.png" id="" class="shopCoinDescription"> 250-300<br/>
+                                <img src="././assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 3-5
                             </span>
                             <span class="questbadgepublic50" id="questbadgepublic50">50</span>
                             <span id="questbadgepublic75_description" class="questbadgepublic75_description hidden">
-                                <img src="./assets/img/chests/gold_chest.png" id="" class="smallChestIcon">
+                                <img src="././assets/img/chests/gold_chest.png" id="" class="smallChestIcon">
                                 <br/>Gold Chest<br/>
-                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 350-400<br/>
-                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 4-6
+                                <img src="././assets/img/coin.png" id="" class="shopCoinDescription"> 350-400<br/>
+                                <img src="././assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 4-6
                             </span>
                             <span class="questbadgepublic75" id="questbadgepublic75">75</span>
                             <span id="questbadgepublic100_description" class="questbadgepublic100_description hidden">
-                                <img src="./assets/img/chests/platinum_chest.png" id="" class="smallChestIcon">
+                                <img src="././assets/img/chests/platinum_chest.png" id="" class="smallChestIcon">
                                 <br/>Platinum Chest<br/>
-                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 450-500<br/>
-                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 5-7
+                                <img src="././assets/img/coin.png" id="" class="shopCoinDescription"> 450-500<br/>
+                                <img src="././assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 5-7
                             </span>
                             <span class="questbadgepublic100" id="questbadgepublic100">100</span>
                             <span id="questbadgepublic150_description" class="questbadgepublic150_description hidden">
-                                <img src="./assets/img/chests/diamond_chest.png" id="" class="smallChestIcon">
+                                <img src="././assets/img/chests/diamond_chest.png" id="" class="smallChestIcon">
                                 <br/>Diamond Chest<br/>
-                                <img src="./assets/img/coin.png" id="" class="shopCoinDescription"> 550-1500<br/>
-                                <img src="./assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 7-10
+                                <img src="././assets/img/coin.png" id="" class="shopCoinDescription"> 550-1500<br/>
+                                <img src="././assets/img/chests/questionmark.png" id="" class="shopCoinDescription"> 7-10
                             </span>
                             <span class="questbadgepublic150" id="questbadgepublic150">150</span>
                         </div>
@@ -891,7 +891,7 @@
                             <span id="public_chest_opened_span" class="quest_center_opened_span" style="display: none;margin-top: -50px;">No Chest</span>
                             <div id="public_quest_opened_container_1" class="horizontalAlignment">
                                 <div id="public_quest_coins_1" class="questCenterVerticalDisplay" style="display: none;">
-                                    <img class="rewardCoinsSmall" src="./assets/img/icons/GloObixCoins.png">
+                                    <img class="rewardCoinsSmall" src="././assets/img/icons/GloObixCoins.png">
                                     <span class="quest_center_skin_span" id="quest_center_coins_public_span_1"><b>0</b> coins</span>
                                 </div>
                                 <div id="public_quest_skins_1_1" style="display: none;" class="questskinreward">
@@ -940,7 +940,7 @@
     <!-- <div style="position: relative; padding-left: 30px" align="left">
                                 <div style="position: relative">
                                     <div style="position: relative; z-index: 2">
-                                        <img src="./assets/img/star.png" alt="LEVEL" style="width: 10%; transform: rotate(-10deg)" />
+                                        <img src="././assets/img/star.png" alt="LEVEL" style="width: 10%; transform: rotate(-10deg)" />
                                         <span id="level" class="xpStar">100</span>
                                         <span id="displayLevel" style="color: white"><b>850246 / 14500000</b> XP&nbsp;(<b>5</b>%)</span>
                                     </div>
@@ -1039,19 +1039,19 @@
                                         <div class="verticalAlignment">
                                             <div id="playercoins_container" class="floatleft">
                                                 <div class="horizontalAlignment unselectable">
-                                                    <img src="./assets/img/coin.png" id="" class="coin_img" style="width: 16px;" />
+                                                    <img src="././assets/img/coin.png" id="" class="coin_img" style="width: 16px;" />
                                                     <div id="usercoins_amount" class="coins_container">0</div>
                                                 </div>
                                                 <div class="playerbaseRewardCenter hidden" id="playerbaseRewardCenter_button">
-                                                    <img src="./assets/img/chests/bronze_chest.png" id="" class="smallChestIconRewardCenter">
+                                                    <img src="././assets/img/chests/bronze_chest.png" id="" class="smallChestIconRewardCenter">
                                                     <span class="notificationRewardCenterButton unseen-count-animation hidden" id="notificationRewardCenterButton"></span>
                                                 </div>
                                                 <div class="playerbaseGiftCodeCenter hidden" id="playerbaseGiftCodeCenter_button">
-                                                    <img src="./assets/img/icons/GiftCodeCoupon.png" id="" class="smallChestIconRewardCenter">
+                                                    <img src="././assets/img/icons/GiftCodeCoupon.png" id="" class="smallChestIconRewardCenter">
                                                     <span class="notificationRewardCenterButton unseen-count-animation hidden" id=""></span>
                                                 </div>
                                                 <div class="playerbaseLeagueLeaderboardCenter hidden" id="playerbaseLeaguesCenter_button">
-                                                    <img src="./assets/img/icons/league_rankings.png" id="" class="smallChestIconRewardCenter">
+                                                    <img src="././assets/img/icons/league_rankings.png" id="" class="smallChestIconRewardCenter">
                                                     <span class="notificationRewardCenterButton unseen-count-animation hidden" id="notificationLeagueCenterButton"></span>
                                                 </div>
                                             </div>
@@ -1237,7 +1237,7 @@
                         <!-- <div style="position: relative; padding-left: 30px" align="left">
                                 <div style="position: relative">
                                     <div style="position: relative; z-index: 2">
-                                        <img src="assets/img/star.png" alt="LEVEL" style="width: 10%; transform: rotate(-10deg)" />
+                                        <img src="./assets/img/star.png" alt="LEVEL" style="width: 10%; transform: rotate(-10deg)" />
                                         <span id="level" class="xpStar">100</span>
                                         <span id="displayLevel" style="color: white"></span>
                                     </div>
@@ -1278,7 +1278,7 @@
                                         <a href="https://forms.gle/zdjQLRETywk7tVnC9" target="_blank"
                                             class="center promoText">Month #1 Community Clips</a>
                                         <!-- <a href="" target="_blank" class="center promoText">Last Chance !</a> -->
-                        <!--<img class="center promoImage" src="assets/img/week_1.gif" />
+                        <!--<img class="center promoImage" src="./assets/img/week_1.gif" />
                                     </div>
                                     <br>
                                     <!-- <p class="text-muted center">Results will be available soon :)</p> -->
@@ -1335,18 +1335,18 @@
                                     </div>
                                     <p class="info unselectable animated_rainbow_1">Account</p>
                                     <div class="horizontalAlignmentAccount">
-                                        <img id="userAvatar" src="assets/img/favicon.png"
+                                        <img id="userAvatar" src="./assets/img/favicon.ico"
                                             class="userAvatar unselectable">
                                         <div class="verticalAlignment">
                                             <div id="playercoins_container" class="floatleft">
                                                 <div class="horizontalAlignment unselectable">
-                                                    <img src="assets/img/coin.png" id="" class="coin_img"
+                                                    <img src="./assets/img/coin.png" id="" class="coin_img"
                                                         style="width: 16px;">
                                                     <div id="usercoins_amount" class="coins_container">0</div>
                                                 </div>
                                                 <div class="playerbaseRewardCenter glow-on-hover"
                                                     id="playerbaseRewardCenter_button">
-                                                    <img src="assets/img/bronze_chest.png" id=""
+                                                    <img src="./assets/img/bronze_chest.png" id=""
                                                         class="smallChestIconRewardCenter">
                                                     <span
                                                         class="notificationRewardCenterButton unseen-count-animation hidden"
@@ -1354,7 +1354,7 @@
                                                 </div>
                                                 <div class="playerbaseGiftCodeCenter glow-on-hover"
                                                     id="playerbaseGiftCodeCenter_button">
-                                                    <img src="assets/img/GiftCodeCoupon.png" id=""
+                                                    <img src="./assets/img/GiftCodeCoupon.png" id=""
                                                         class="smallChestIconRewardCenter">
                                                     <span
                                                         class="notificationRewardCenterButton unseen-count-animation hidden"
@@ -1362,7 +1362,7 @@
                                                 </div>
                                                 <div class="playerbaseLeagueLeaderboardCenter glow-on-hover"
                                                     id="playerbaseLeaguesCenter_button">
-                                                    <img src="assets/img/league_rankings.png" id=""
+                                                    <img src="./assets/img/league_rankings.png" id=""
                                                         class="smallChestIconRewardCenter">
                                                     <span
                                                         class="notificationRewardCenterButton unseen-count-animation hidden"
@@ -1428,23 +1428,23 @@
                                     <!-- <p class="info">OnGoing Events</p> -->
                                     <!-- <a href="https://forms.gle/zdjQLRETywk7tVnC9" target="_blank"
                                         class="center promoText">Month #1 Community Clips</a>
-                                    <img class="center promoImage" src="assets/img/week_1.gif"> -->
+                                    <img class="center promoImage" src="./assets/img/week_1.gif"> -->
                                     <br>
                                     <!-- <p class="info-verySmall">Season #2 Ending in July 2022! </p> -->
 
                                     <!-- <p class="info-verySmall">Season #2 Ending in December 2023! </p>
                                     <a href="https://forms.gle/ctBRAesNyGNE1jbg8" target="_blank"
                                         class="center promoText_smaller" style="color: aliceblue;">Season #2 Community Clips</a>
-                                    <img class="center promoImage_smaller" src="assets/img/contestWinner1.gif"> -->
+                                    <img class="center promoImage_smaller" src="./assets/img/contestWinner1.gif"> -->
                                     <p class="info-verySmall">Submit your clips now for the contest!</p>
                                     <a href="https://forms.gle/mx66bSPupRQC2ULF6" target="_blank"
                                         class="center promoText_smaller animated_rainbow_1"
                                         style="color: aliceblue; border-radius: 20px;">Community Clips
                                         (SEASON 2)</a>
-                                    <!-- <img class="center promoImage_smaller" src="assets/img/gifs/GloObixContest1_Winner.gif"> -->
+                                    <!-- <img class="center promoImage_smaller" src="./assets/img/gifs/GloObixContest1_Winner.gif"> -->
                                     <video class="center promoImage_smaller" autoplay="" loop="" muted="" playsinline=""
                                         style="height: 250px; border-radius: 20px;">
-                                        <source src="assets/img/videos/gloobix.mp4" type="video/mp4">
+                                        <source src="./assets/img/videos/gloobix.mp4" type="video/mp4">
                                         Your browser does not support the video tag.
                                     </video>
 
@@ -1505,7 +1505,7 @@
                                 </div>
                                 <div class="skinPickerButton glow-on-hover">
                                     <img class="currentSkin" id="currentSkin" width="80" height="80"
-                                        src="assets/img/no.png" onclick="openSkinsList()">
+                                        src="./assets/img/no.png" onclick="openSkinsList()">
                                 </div>
                             </div>
                             <div class="seperatorh"></div>
@@ -1560,14 +1560,14 @@
                         <div class="horizontalAlignment">
                             <div id="selectedGamemode1" class="item selectedGamemode"
                                 onclick="window.selectModeById('ffa'); cleanSelect(); this.classList.add('selectedGamemode')">
-                                <img id="gamemode1" src="assets/img/ffa.png" class="gamemodeAvatar">
+                                <img id="gamemode1" src="./assets/img/ffa.png" class="gamemodeAvatar">
                                 <span class="animated_rainbow_1" style="display: block;padding: 2px;">FFA&nbsp;
                                     <!-- <span class="newBadge">&nbsp;UPDATED&nbsp;</span> --></span>
                                 <span id="PartyClassic_icon" class="gamemodeIcon" style="display: block;">🔥</span>
                             </div>
                             <div id="selectedGamemode2" class="item"
                                 onclick="window.selectModeById('teams'); cleanSelect(); this.classList.add('selectedGamemode')">
-                                <img id="gamemode2" src="assets/img/partyModeExp.png" class="gamemodeAvatar">
+                                <img id="gamemode2" src="./assets/img/partyModeExp.png" class="gamemodeAvatar">
                                 <span class="animated_rainbow_1" style="display: block;padding: 2px;">Teams&nbsp;</span>
                                 <!-- <span class="eventBadge">&nbsp; EVENT &nbsp;</span> -->
                                 <!-- <span class="gamemodeText">Party Mode Big Bots</span> -->
@@ -1575,7 +1575,7 @@
                             </div>
                             <div id="selectedGamemode3" class="item"
                                 onclick="window.selectModeById('selfeed'); cleanSelect(); this.classList.add('selectedGamemode')">
-                                <img id="gamemode3" src="assets/img/partyModeSelfeed.png" class="gamemodeAvatar">
+                                <img id="gamemode3" src="./assets/img/partyModeSelfeed.png" class="gamemodeAvatar">
                                 <span class="animated_rainbow_1"
                                     style="display: block;padding: 2px;">Selfeed&nbsp;<!-- <span class="newBadge2">&nbsp;SEASONAL&nbsp;</span> --></span>
                                 <!-- <span class="eventBadge">&nbsp; EVENT &nbsp;</span> -->
@@ -1583,7 +1583,7 @@
                             </div>
                             <div id="selectedGamemode4" class="item"
                                 onclick="window.selectModeById('experimental'); cleanSelect(); this.classList.add('selectedGamemode')">
-                                <img id="gamemode4" src="assets/img/partyModeClassic.png" class="gamemodeAvatar">
+                                <img id="gamemode4" src="./assets/img/partyModeClassic.png" class="gamemodeAvatar">
                                 <span class="animated_rainbow_1" style="display: block;padding: 2px;">Experimental&nbsp;
                                     <!-- <span class="newBadge">&nbsp;UPDATED&nbsp;</span> --></span>
                                 <!-- <span class="gamemodeText">Party Mode Megasplit</span> -->
@@ -1593,7 +1593,7 @@
                         <div class="horizontalAlignment">
                             <div id="selectedGamemode5" class="item"
                                 onclick="window.selectModeById('megasplit'); cleanSelect(); this.classList.add('selectedGamemode')">
-                                <img id="gamemode5" src="assets/img/partyModeMegasplit.png" class="gamemodeAvatar">
+                                <img id="gamemode5" src="./assets/img/partyModeMegasplit.png" class="gamemodeAvatar">
                                 <span class="animated_rainbow_1" style="display: block;padding: 2px;">Megasplit&nbsp;
                                     <!-- <span class="newBadge">&nbsp;UPDATED&nbsp;</span> <span class="newBadge2">Updating🛠️</span> <!-- <span class="newBadge">&nbsp;EVENT&nbsp;</span> --></span>
                                 <!-- <span class="eventBadge">&nbsp; EVENT &nbsp;</span> -->
@@ -1601,29 +1601,29 @@
                             </div>
                             <div id="selectedGamemode6" class="item"
                                 onclick="window.selectModeById('ghost'); cleanSelect(); this.classList.add('selectedGamemode')">
-                                <img id="gamemode6" src="assets/img/ffa.png" class="gamemodeAvatar">
+                                <img id="gamemode6" src="./assets/img/ffa.png" class="gamemodeAvatar">
                                 <span class="animated_rainbow_1" style="display: block;padding: 2px;">Ghost&nbsp;</span><!--<span class="newBadge"
                                         style="font-size: 11px;">&nbsp;SEASONAL&nbsp;</span>-->
                                 <span id="FFABoosters_icon" class="gamemodeIcon" style="display: none;"></span>
                             </div>
                             <!-- <div id="selectedGamemode6" class="item"
                                 onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode')">
-                                <img id="gamemode6" src="assets/img/ffa.png" class="gamemodeAvatar">
+                                <img id="gamemode6" src="./assets/img/ffa.png" class="gamemodeAvatar">
                                 <span class="gamemodeText">FFA Boosters</span>
                                 <span id="FFABoosters_icon" class="gamemodeIcon"></span>
                             </div> -->
                             <!--<div id="selectedGamemode7" class="item"
                                 onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode')">
-                                <img id="gamemode7" src="assets/img/scrimmage1v1.png" class="gamemodeAvatar">
+                                <img id="gamemode7" src="./assets/img/scrimmage1v1.png" class="gamemodeAvatar">
                                 <span class="gamemodeText">Scrims 1v1 <span class="newBadge"> (Closed) </span></span>
                             </div> -->
                             <!-- <div id="selectedGamemode7" class="item" onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode')">
-                                <img id="gamemode7" src="assets/img/scrimmage1v1.png" class="gamemodeAvatar">
+                                <img id="gamemode7" src="./assets/img/scrimmage1v1.png" class="gamemodeAvatar">
                                 <span class="gamemodeText">Old Party Mode</span>
                             </div> -->
                             <div id="selectedGamemode7" class="item"
                                 onclick="window.selectModeById('minions'); cleanSelect(); this.classList.add('selectedGamemode')">
-                                <img id="gamemode7" src="assets/img/scrimmage1v1.png" class="gamemodeAvatar">
+                                <img id="gamemode7" src="./assets/img/scrimmage1v1.png" class="gamemodeAvatar">
                                 <span class="animated_rainbow_1"
                                     style="display: block;padding: 2px;">Minions&nbsp;</span><!--<span
                                         class="newBadge2">&nbsp;ABILITIES&nbsp;</span>--><!-- <span class="newBadge">&nbsp;NEW MODE&nbsp;</span> -->
@@ -1633,14 +1633,14 @@
                             </div>
                             <!-- <div id="selectedGamemode8" class="item"
                                 onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode'); sendServerCode(-1)">
-                                <img id="gamemode8" src="assets/img/partyModeMegasplitOld.png"
+                                <img id="gamemode8" src="./assets/img/partyModeMegasplitOld.png"
                                     class="gamemodeAvatar">
                                 <span class="gamemodeText"><span class="newBadge2">&nbsp;Offline for&nbsp; &nbsp;update🛠️</span></span>
                                 <span id="teamsmode_icon" class="gamemodeIcon"></span>
                             </div> -->
                             <div id="selectedGamemode8" class="item"
                                 onclick="window.selectModeById('imvirus'); cleanSelect(); this.classList.add('selectedGamemode')">
-                                <img id="gamemode8" src="assets/img/partyModeMegasplitOld.png" class="gamemodeAvatar">
+                                <img id="gamemode8" src="./assets/img/partyModeMegasplitOld.png" class="gamemodeAvatar">
                                 <span class="gamemodeText"
                                     style="font-size: 11px;"><!-- Selfeed Abilities --></span><span
                                     class="animated_rainbow_1"
@@ -1658,22 +1658,22 @@
                         <div id="tourneyModesContainer" class="horizontalAlignment" style="display: none">
                             <div id="selectedGamemode9" class="item-1"
                                 onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode'); sendServerCode(-1)">
-                                <img id="gamemode9" src="assets/img/scrimmage1v1FFA.png" class="gamemodeAvatar">
+                                <img id="gamemode9" src="./assets/img/scrimmage1v1FFA.png" class="gamemodeAvatar">
                                 <span class="gamemodeText">Scrimmage 1v1 FFA</span>
                             </div>
                             <div id="selectedGamemode10" class="item"
                                 onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode'); sendServerCode(-1)">
-                                <img id="gamemode10" src="assets/img/scrimmage1v1EXP.png" class="gamemodeAvatar">
+                                <img id="gamemode10" src="./assets/img/scrimmage1v1EXP.png" class="gamemodeAvatar">
                                 <span class="gamemodeText">Scrimmage 1v1 EXP</span>
                             </div>
                             <div id="selectedGamemode11" class="item"
                                 onclick="setserver('localhost:3004'); cleanSelect(); this.classList.add('selectedGamemode'); sendServerCode(-1)">
-                                <img id="gamemode11" src="assets/img/scrimmage2v2.png" class="gamemodeAvatar">
+                                <img id="gamemode11" src="./assets/img/scrimmage2v2.png" class="gamemodeAvatar">
                                 <span class="gamemodeText">Scrimmage 2v2</span>
                             </div>
                             <div id="selectedGamemode12" class="item"
                                 onclick="setserver('localhost:443'); cleanSelect(); this.classList.add('selectedGamemode'); sendServerCode(-1)">
-                                <img id="gamemode12" src="assets/img/scrimmage2v2v2.png" class="gamemodeAvatar">
+                                <img id="gamemode12" src="./assets/img/scrimmage2v2v2.png" class="gamemodeAvatar">
                                 <span class="gamemodeText">Scrimmage 2v2v2</span>
                             </div>
                         </div>
@@ -1719,7 +1719,7 @@
                             </div>
                             <div id="partyContainer7" class="horizontalAlignment" style="display: none">
                                 <p target="_blank" class="partyFooterText">Joining Party...</p>
-                                <img class="center createPartyImage" src="assets/img/gifs/PartyAnimation.gif"
+                                <img class="center createPartyImage" src="./assets/img/gifs/PartyAnimation.gif"
                                     id="partyAnimationCells2">
                             </div>
                             <div id="partyContainer8" class="horizontalAlignment" style="display: none">
@@ -1734,17 +1734,17 @@
                     <div class="UserContainer-promo">
                         <!-- <div
                             onclick="setserver('localhost:443'); cleanSelect(); document.getElementById('selectedGamemode5').classList.add('selectedGamemode')">
-                            <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoContent02.png">
+                            <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/promoContent02.png">
                         </div> -->
                         <!-- <div onclick="window.open('https://youtu.be/NPGxHMZEkAw','_blank')">
-                            <img id="PromoContent" class="center promoImagePromotions" src="assets/img/communityClips1.jpg">
+                            <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/communityClips1.jpg">
                             <p class="info">Season #1 is Over</p>
                             <p class="info-verySmall">Thanks for taking part of it this event !</p>
                         </div> -->
                         <div onclick="showNewsPopup()" style="display:none">
                             <br>
                             <p class="info-verySmall">Squid Game x GloObix.Io</p>
-                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoImageSquidGame.jpg" style="margin-top: -1px;"> -->
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/promoImageSquidGame.jpg" style="margin-top: -1px;"> -->
                             <p class="info-verySmall">&nbsp;</p>
                             <p class="info-verySmall">Try these new fresh skins!</p>
                             <p class="info"></p>
@@ -1753,7 +1753,7 @@
                         <div onclick="" style="display:none">
                             <br>
                             <p class="info-verySmall">Sing 2 x GloObix.Io</p>
-                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/Sing2xGloobixSkinRelease.jpg" style="margin-top: -1px;"> -->
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/Sing2xGloobixSkinRelease.jpg" style="margin-top: -1px;"> -->
                             <p class="info-verySmall">&nbsp;</p>
                             <p class="info-verySmall">Try these new fresh skins!</p>
                             <p class="info"></p>
@@ -1762,7 +1762,7 @@
                         <div id="stpatrickeventday" onclick="startDailyQuest('patrickday')" style="display:none">
                             <br>
                             <p class="info-verySmall">St Patrick's Week-end!</p>
-                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoStPatrick.jpg" style="margin-top: -1px;"> -->
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/promoStPatrick.jpg" style="margin-top: -1px;"> -->
                             <p class="info-verySmall">&nbsp;</p>
                             <p class="info-verySmall">Celebrate St Patrick's day with these Exclusive week-end
                                 quests!
@@ -1773,7 +1773,7 @@
                         <div id="stpatrickeventday" onclick="startDailyQuest('patrickday')" style="display:none">
                             <br>
                             <p class="info-verySmall">Easter Egg Week-end!</p>
-                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoEaster.jpg" style="margin-top: -1px;"> -->
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/promoEaster.jpg" style="margin-top: -1px;"> -->
                             <p class="info-verySmall">&nbsp;</p>
                             <p class="info-verySmall">Celebrate Easter day with these Exclusive week-end quests!</p>
                             <p class="info-verySmall">Only for Party Mode Big Bots!</p>
@@ -1782,7 +1782,7 @@
                         </div>
                         <div id="bigbotsMOREBOTSEVENT" onclick="" style="display:none">
                             <p class="info-verySmall">Big Bots Week-Event!</p>
-                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoBigbots.jpg" style="margin-top: -1px;"> -->
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/promoBigbots.jpg" style="margin-top: -1px;"> -->
                             <p class="info-verySmall">&nbsp;</p>
                             <p class="info-verySmall">All players are getting +25% bots!</p>
                             <p class="info-verySmall">Only for Party Mode Big Bots!</p>
@@ -1791,7 +1791,7 @@
                         </div>
                         <div id="bigbotsMOREBOTSEVENT" onclick="" style="display:none">
                             <p class="info-verySmall">Classic Party Week EVENT!</p>
-                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/promoClassicParty.png" style="margin-top: -1px;"> -->
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/promoClassicParty.png" style="margin-top: -1px;"> -->
                             <p class="info-verySmall">&nbsp;</p>
                             <p class="info-verySmall">All players are getting +25% bots, and +25% Mass Boosters!
                                 Event
@@ -1816,8 +1816,8 @@
                             <!-- <br> -->
                             <!-- <p class="info-verySmall">Coming Very Soon</p> -->
                             <p class="info-verySmall">Click to join this 9th birthday event!</p>
-                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/EventOnline.png" style="margin-top: -1px;" onclick="setserver('localhost:443')"> -->
-                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/EventOnline.png" style="margin-top: -1px;" onclick="window.open('https://discord.gg/7RgaKwUnyM')"> -->
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/EventOnline.png" style="margin-top: -1px;" onclick="setserver('localhost:443')"> -->
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/EventOnline.png" style="margin-top: -1px;" onclick="window.open('https://discord.gg/7RgaKwUnyM')"> -->
                             <p class="info-verySmall">&nbsp;</p>
                             <!-- <p class="info-verySmall">December, 1st: GloObix.Io Winter Season Edition</p>
                             <p class="info-verySmall">December, 4th: Gloobix or Party Mode Event ( <a target="_blank" href="https://discord.gg/z3smvNZd7n">Link</a> )</p> -->
@@ -1833,7 +1833,7 @@
                             <br>
                             <p class="info-verySmall">Our Discord Servers: </p>
                             <p class="info-verySmall">Click to join!</p>
-                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/discordPromotion.gif" style="margin-top: -1px;" onclick="window.open('https://discord.com/invite/5gXJaJQ')"> -->
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/discordPromotion.gif" style="margin-top: -1px;" onclick="window.open('https://discord.com/invite/5gXJaJQ')"> -->
                             <p class="info-verySmall">&nbsp;</p>
                             <p class="info-verySmall">Chat with other members!</p><br>
                             <p class="info-verySmall">Official GloObix.Io Server ( News, <a target="_blank"
@@ -1846,14 +1846,14 @@
                         </div>
                         <!-- <div onclick="" style='display:block'> 
                             <br>
-                            <img id="PromoContent" class="center promoImagePromotionsSponsor" src="assets/img/sponsor.png" style="margin-top: -1px;" onclick="window.open('https://bit.ly/ps5gloobixgiveaway')">
+                            <img id="PromoContent" class="center promoImagePromotionsSponsor" src="./assets/img/sponsor.png" style="margin-top: -1px;" onclick="window.open('https://bit.ly/ps5gloobixgiveaway')">
                             
                             <p class="info"></p>
                             <p class="info-verySmall"></p>
                         </div>  -->
                         <!-- <div onclick="" style='display:block'> 
                             <br>
-                            <img id="PromoContent" class="center promoImagePromotionsSponsor" src="assets/img/selfeed_update.png" style="margin-top: -1px;" onclick="setserver('localhost:443'); cleanSelect(); document.getElementById('selectedGamemode3').classList.add('selectedGamemode')">
+                            <img id="PromoContent" class="center promoImagePromotionsSponsor" src="./assets/img/selfeed_update.png" style="margin-top: -1px;" onclick="setserver('localhost:443'); cleanSelect(); document.getElementById('selectedGamemode3').classList.add('selectedGamemode')">
                             
                             <p class="info"></p>
                             <p class="info-verySmall"></p>
@@ -1866,7 +1866,7 @@
                             <video class="center" autoplay="" loop="" muted="" playsinline=""
                                 style="height: 250px;max-height: 145px;margin-left: 20px;border: 2px solid #f9939300;border-radius: 20px;"
                                 onclick="window.open(`https://forms.gle/ju9pKEpxpCDN23Gh9`)">
-                                <source src="assets/img/videos/GloobixDev.mp4" type="video/mp4">
+                                <source src="./assets/img/videos/GloobixDev.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                             <span
@@ -1877,7 +1877,7 @@
                         <!-- <div onclick="showEventPopup()" style='display:none'>
                             <br>
                             <p class="info-verySmall">GloObix.Io Winter Season Event</p>
-                            <img id="PromoContent" class="center promoImagePromotions" src="assets/img/gloobixWinterEvent.jpg" style="margin-top: -1px;">
+                            <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/gloobixWinterEvent.jpg" style="margin-top: -1px;">
                             <p class="info-verySmall">&nbsp;</p>
                             <p class="info-verySmall">Complete 24 quests to unlock a MYSTERY SKIN</p>
                             <p class="info"></p>
@@ -1887,17 +1887,17 @@
                             target="_blank">
                             <br>
                             <!-- <p class="info-verySmall">New Year Giveaways!</p> -->
-                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="assets/img/newyear2022.jpg" style="margin-top: -1px;">
+                            <!-- <img id="PromoContent" class="center promoImagePromotions" src="./assets/img/newyear2022.jpg" style="margin-top: -1px;">
                             <p class="info-verySmall">&nbsp;</p>
                             <p class="info-verySmall">Join our discord servers!</p>
                             <p class="info-verySmall">The giveaways has ended! Thanks for participating!</p> -->
                             <!-- <div style="display: inline-flex;flex-direction: row;justify-content: center;align-items: center;">
                                 <p>GloObix.Io: </p>
-                                <img src="assets/img/logo-discord.png" id="discordBtn1" class="btnDiscord" name="https://discord.gg/484szvX" onclick="window.open(this.name)" style="height: 20px; width: 20px;"> </img>
+                                <img src="./assets/img/logo-discord.png" id="discordBtn1" class="btnDiscord" name="https://discord.gg/484szvX" onclick="window.open(this.name)" style="height: 20px; width: 20px;"> </img>
                             </div>
                             <div style="display: inline-flex;flex-direction: row;justify-content: center;align-items: center;">
                                 <p> Gloobix Community: </p>
-                                <img src="assets/img/logo-discord.png" id="discordBtn2" class="btnDiscord" name="https://discord.gg/hRgZQTW9De" onclick="window.open(this.name)" style="height: 20px; width: 20px;"> </img>
+                                <img src="./assets/img/logo-discord.png" id="discordBtn2" class="btnDiscord" name="https://discord.gg/hRgZQTW9De" onclick="window.open(this.name)" style="height: 20px; width: 20px;"> </img>
                             </div> -->
                             <p class="info"></p>
                             <p class="info-verySmall"></p>
@@ -1911,51 +1911,51 @@
                     <!-- <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont15"
                             onclick="setserver('localhost:443')">
                             <span class="newBadgePink">POPULAR</span> SELFEED<img class="img-gamemodes-gloobix"
-                                src="assets/img/crazyselfeed.png" />
+                                src="./assets/img/crazyselfeed.png" />
                         </button>
                         <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont13"
                             onclick="setserver('localhost:443')">
                             <span class="newBadgePink">POPULAR</span> MEGASPLIT
-                            <img class="img-gamemodes-gloobix" src="assets/img/megasplit.png" />
+                            <img class="img-gamemodes-gloobix" src="./assets/img/megasplit.png" />
                         </button>
                         <!-- <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont13"
                             onclick="setserver('localhost:443')">
                             <span class="newBadge">NEW</span>
-                            PRIV. PARTY<img class="img-gamemodes-gloobix" src="assets/img/megasplit.png" />
+                            PRIV. PARTY<img class="img-gamemodes-gloobix" src="./assets/img/megasplit.png" />
                         </button> -->
                     <!--<button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont15"
                             onclick="setserver('localhost:443')">
-                            PARTY BIG BOTS<img class="img-gamemodes-gloobix" src="assets/img/party.png" />
+                            PARTY BIG BOTS<img class="img-gamemodes-gloobix" src="./assets/img/party.png" />
                         </button>
                         <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont11"
                             onclick="setserver('localhost:443')">
                             <span class="newBadgePink">&nbsp;UPDATED&nbsp;</span> PARTY MODE<img class="img-gamemodes-gloobix"
-                                src="assets/img/party.png" />
+                                src="./assets/img/party.png" />
                         </button>
                         <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont15"
                             onclick="setserver('localhost:443')">
-                            FFA Boosters<img class="img-gamemodes-gloobix" src="assets/img/party.png" />
+                            FFA Boosters<img class="img-gamemodes-gloobix" src="./assets/img/party.png" />
                         </button>
                         <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont15"
                             onclick="setserver('localhost:443')">
-                            BETA 1v1 SCRIMS<img class="img-gamemodes-gloobix" src="assets/img/1v1.png" />
+                            BETA 1v1 SCRIMS<img class="img-gamemodes-gloobix" src="./assets/img/1v1.png" />
                         </button>
                         <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont11"
                             onclick="setserver('localhost:443')">
-                            OLD PARTY MODE<img class="img-gamemodes-gloobix" src="assets/img/party.png" />
+                            OLD PARTY MODE<img class="img-gamemodes-gloobix" src="./assets/img/party.png" />
                         </button>
                         <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont13"
                             onclick="setserver('localhost:443')">
-                            PARTY MEGASPLIT<img class="img-gamemodes-gloobix" src="assets/img/megasplit.png" />
+                            PARTY MEGASPLIT<img class="img-gamemodes-gloobix" src="./assets/img/megasplit.png" />
                         </button>
 
                         <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont11"
                             onclick="setserver('localhost:443')"><span class="newBadge">NEW</span>
-                            PARTY EXP BOTS<img class="img-gamemodes-gloobix" src="assets/img/selfeed.png" />
+                            PARTY EXP BOTS<img class="img-gamemodes-gloobix" src="./assets/img/selfeed.png" />
                         </button>
                         <button class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder smallFont13"
                             onclick="setserver('localhost:443')">
-                            INSTANT MERGING<img class="img-gamemodes-gloobix" src="assets/img/instant.png" />
+                            INSTANT MERGING<img class="img-gamemodes-gloobix" src="./assets/img/instant.png" />
                         </button>
 
                         <div class="gamemodeSelector" onclick="this.classList.add('expand')">
@@ -1985,19 +1985,19 @@
                                                     class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
                                                     onclick="setserver('localhost:443')">
                                                     1V1#1 FFA TOURNEY<img class="img-gamemodes-gloobix"
-                                                        src="assets/img/1v1.png" />
+                                                        src="./assets/img/1v1.png" />
                                                 </button>
                                                 <button
                                                     class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
                                                     onclick="setserver('localhost:443')">
                                                     1V1#2 FFA TOURNEY<img class="img-gamemodes-gloobix"
-                                                        src="assets/img/1v1.png" />
+                                                        src="./assets/img/1v1.png" />
                                                 </button>
                                                 <button
                                                     class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
                                                     onclick="setserver('localhost:443')">
                                                     1V1#3 FFA TOURNEY<img class="img-gamemodes-gloobix"
-                                                        src="assets/img/1v1.png" />
+                                                        src="./assets/img/1v1.png" />
                                                 </button>
                                             </div>
                                         </div>
@@ -2008,19 +2008,19 @@
                                                     class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
                                                     onclick="setserver('localhost:443')">
                                                     1V1#1 EXP TOURNEY<img class="img-gamemodes-gloobix"
-                                                        src="assets/img/1v1megasplit.png" />
+                                                        src="./assets/img/1v1megasplit.png" />
                                                 </button>
                                                 <button
                                                     class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
                                                     onclick="setserver('localhost:443')">
                                                     1V1#2 EXP TOURNEY<img class="img-gamemodes-gloobix"
-                                                        src="assets/img/1v1megasplit.png" />
+                                                        src="./assets/img/1v1megasplit.png" />
                                                 </button>
                                                 <button
                                                     class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
                                                     onclick="setserver('localhost:443')">
                                                     1V1#3 EXP TOURNEY<img class="img-gamemodes-gloobix"
-                                                        src="assets/img/1v1megasplit.png" />
+                                                        src="./assets/img/1v1megasplit.png" />
                                                 </button>
                                             </div>
                                         </div>
@@ -2031,19 +2031,19 @@
                                                     class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
                                                     onclick="setserver('localhost:443')">
                                                     2v2 TOURNEY<img class="img-gamemodes-gloobix"
-                                                        src="assets/img/2v2.png" />
+                                                        src="./assets/img/2v2.png" />
                                                 </button>
                                                 <button
                                                     class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
                                                     onclick="setserver('localhost:443')">
                                                     2v2V2 TOURNEY<img class="img-gamemodes-gloobix"
-                                                        src="assets/img/2v2v2.png" />
+                                                        src="./assets/img/2v2v2.png" />
                                                 </button>
                                                 <button
                                                     class="button-gamemodes-gloobix-style button-gamemodes-select whiteborder buttonSelectorBg"
                                                     onclick="setserver('localhost:443')">
                                                     CRAZY SELFEED<img class="img-gamemodes-gloobix"
-                                                        src="assets/img/crazyselfeed.png" />
+                                                        src="./assets/img/crazyselfeed.png" />
                                                 </button>
                                             </div>
                                         </div>
@@ -2138,15 +2138,15 @@
                     <!-- <div onclick="window.open('https://discord.gg/ERyY85BFG3')" style="display: block;">
                     <h2 class="center text-muted">GloObix.io x Gloobix Community</h2>
                     <p class="center text-muted">Join the 5th Anniversary Events! Click here to join</p>
-                    <img src="assets/img/GloobixCom5thBdayEvents.gif">
+                    <img src="./assets/img/GloobixCom5thBdayEvents.gif">
                 </div> -->
                     <!-- <div id="bottom_news" onclick="window.open('https://discord.com/invite/7RgaKwUnyM')" style="display: none;" class="glow-on-hover">
-                    <img src="assets/img/Gloobixcommunity9thbdayevent2.gif">
+                    <img src="./assets/img/Gloobixcommunity9thbdayevent2.gif">
                 </div> -->
                     <div id="bottom_news" onclick="showSeasonPass()" style="display: block;" class="glow-on-hover">
                         <!-- <h2 class="center text-muted">GloObix.io x Gloobix Community</h2>
                     <p class="center text-muted">Join the event! Click here to join</p> -->
-                        <!-- <img src="assets/img/gifs/2025JulyUpdate.gif"> -->
+                        <!-- <img src="./assets/img/gifs/2025JulyUpdate.gif"> -->
                     </div>
                 </div>
             </div>
@@ -2207,22 +2207,22 @@
             <div onclick="window.open('https://discord.gg/Gloobix-community-agar-io-more-5-years-already-450232713429909514')"
                 style="cursor: pointer;">
                 <span class="discordGloobixCommunity">Gloobix Community</span>
-                <img src="assets/img/logo-discord.png" id="discordBtn" class="btnDiscord fixSC_DCbtn"
+                <img src="./assets/img/logo-discord.png" id="discordBtn" class="btnDiscord fixSC_DCbtn"
                     name="https://discord.gg/Gloobix-community-agar-io-more-5-years-already-450232713429909514"
                     onclick="window.open(this.name)">
             </div>
 
             <div style="cursor: pointer;">
                 <span class="discordgloobix">Gloobix.io</span>
-                <img src="assets/img/logo-discord.png" id="discordBtn" class="btnDiscord fixISP_DCbtn"
+                <img src="./assets/img/logo-discord.png" id="discordBtn" class="btnDiscord fixISP_DCbtn"
                     name="https://discord.gg/yh5DESB" onclick="window.open(this.name)">
             </div>
 
-            <img src="assets/img/logo-reddit.png" id="redditBtn" class="btnDiscord"
+            <img src="./assets/img/logo-reddit.png" id="redditBtn" class="btnDiscord"
                 name="https://www.reddit.com/r/GloobixCommunity/" onclick="window.open(this.name)"
                 style="margin-left: 2px; cursor: pointer;">
 
-            <img src="assets/img/logo-googleplay.png" id="redditBtn" class="btnDiscord"
+            <img src="./assets/img/logo-googleplay.png" id="redditBtn" class="btnDiscord"
                 name="https://play.google.com/store/apps/details?id=com.gloobixmobile" onclick="window.open(this.name)"
                 style="margin-left: 2px; cursor: pointer;">
 
@@ -2246,10 +2246,10 @@
                 <div id="joystick-handle"></div>
                 <div id="touchpad"></div>
                 <div id="touchCircle" style="display: none"></div>
-                <img src="assets/img/split.png" id="splitBtn">
-                <img src="assets/img/eject.png" id="ejectBtn">
-                <img src="assets/img/splitBot.png" id="splitBotBtn">
-                <img src="assets/img/ejectBot.png" id="ejectBotBtn">
+                <img src="./assets/img/split.png" id="splitBtn">
+                <img src="./assets/img/eject.png" id="ejectBtn">
+                <img src="./assets/img/splitBot.png" id="splitBotBtn">
+                <img src="./assets/img/ejectBot.png" id="ejectBotBtn">
             </div>
             <!--     <canvas
         style="font-family: 'Ubuntu'; position: fixed; left: 50%; bottom: 20px; transform: translate(-50%, -50%); margin: 0 auto;">

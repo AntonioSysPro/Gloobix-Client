@@ -3360,9 +3360,14 @@ spectate-button {
   transform: translate(-50%, -50%);
   padding: 10px;
   border-radius: 50%;
-  background-image: url("../img/favicon.png");
+  background-image: url("https://gloobix-io.onrender.com/web/assets/img/favicon.png");
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+input#skin,
+input#partyFriendAdd {
+  color: #00ff2a;
 }
 
 .gamemode_loader_spinner {
