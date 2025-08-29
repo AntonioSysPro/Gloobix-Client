@@ -1,9 +1,42 @@
-// Recupera la información de los nombres de las personas que contribuyeron
-const backendNames = [ "pepe", "migel", "juan" ];
+// Donaciones.js
 
-backendNames.forEach( ( name ) =>
-{
-    document.getElementById( "name" ).textContent += name + ", ";
-} );
+class Donaciones {
+    constructor() {
+        this.donaciones = [];
+    }
 
-console.log( "Finalmente añadimos a", backendNames.length, "personas al final del mensaje" );
+    agregarDonación(donacion) {
+        this.donaciones.push(donacion);
+    }
+
+    eliminarDonación(donacion) {
+        const index = this.donaciones.indexOf(donacion);
+        if (index !== -1) {
+            this.donaciones.splice(index, 1);
+        }
+    }
+
+    mostrarDonaciones() {
+        console.log(this.donaciones);
+    }
+}
+
+const donaciones = new Donaciones();
+
+// Agregar donación
+donaciones.agregarDonación({
+    nombre: 'Donación 1',
+    descripcion: 'Descripción de la donación 1',
+    valor: 10.99,
+    tipo: 'gloobix.io'
+});
+
+// Eliminar donación
+donaciones.eliminarDonación({
+    nombre: 'Donación 2',
+    descripcion: 'Descripción de la donación 2',
+    valor: 9.99,
+    tipo: 'gloobix.io'
+});
+
+donaciones.mostrarDonaciones();

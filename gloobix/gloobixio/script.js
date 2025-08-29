@@ -5,5 +5,3 @@ backendNames.forEach( ( name ) =>
 {
     document.getElementById( "name" ).textContent += name + ", ";
 } );
-
-console.log( "Finalmente añadimos a", backendNames.length, "personas al final del mensaje" );

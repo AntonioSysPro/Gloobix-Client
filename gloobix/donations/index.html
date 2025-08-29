@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Donations</title>
+    <link id="favicon" rel="icon" type="image/png" href="../web/assets/img/favicon.ico">
     <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
@@ -12,7 +13,7 @@
 <body class="fade-enter-active">
     <script src="../js/bootstrap.min.js"></script>
     <nav class="navbar navbar-expand-md">
-        <a class="navbar-brand" href="../gloobixio"><img src="/gloobix/web/assets/img/favicon.ico"
+        <a class="navbar-brand" href="../gloobixio"><img src="../web/assets/img/favicon.ico"
                 class="navbar-brand-img" width="40px" height="40px" /></a>
         <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
             <span class="navbar-toggler-icon"></span>
@@ -37,19 +38,40 @@
                     <a class="nav-link" href="https://discord.com/invite/5gXJaJQ">Discord</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../thanks">Thanks</a>
+                    <a class="nav-link" href="../support">Support</a>
                 </li>
             </ul>
         </div>
     </nav>
-    <div class="container">
-        <h1>Donations a los miembros de nuestro equipo backend que contribuyeron al éxito de tu juego</h1>
-        <p>Gracias a <span id="name">pepe, migel, juan y demás</span>,
-        <p>Gracias a <span id="name">pepe, migebl, juan y demás</span>, tu juego ha sido un éxito. Estamos orgullosos de
-            todas las contribuciones que han hecho a nuestra comunidad.</p>
-
-        <!-- Añade más contenido según tus necesidades -->
-    </div>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#about">Acerca de</a></li>
+                <li><a href="#donaciones">Donaciones</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="about">
+            <h1>¿Por qué donar?</h1>
+            <p>En Gloobix.io, cada donación es crucial para ayudarnos a construir un mundo más hermoso y diverso. Los fondos generados por tus donaciones se utilizarán para:</p>
+            <ul>
+                <li>Desarrollar nuevos personajes y objetos</li>
+                <li>Mantenimiento del juego y su infraestructura</li>
+                <li>Publicación de contenido exclusivo en nuestro servidor</li>
+            </ul>
+        </section>
+        <section id="donaciones">
+            <h1>Donaciones</h1>
+            <div class="donacion-list">
+                <!-- Donaciones aquí -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Gloobix.io. Todos los derechos reservados.</p>
+    </footer>
     <script src="./script.js"></script> <!-- Añade el archivo JavaScript aquí -->
 
 </body>

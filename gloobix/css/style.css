@@ -45,7 +45,7 @@ html {
 
 .nav-link:hover {
   color: #000;
-  border-radius: 15px;
+  border-radius: 100%;
   user-select: none;
   animation: scaler 0.5s alternate-reverse infinite;
   background: #10f2c1;
