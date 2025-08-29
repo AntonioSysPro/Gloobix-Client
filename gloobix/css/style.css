@@ -26,6 +26,10 @@ html {
   border: 0;
   border-radius: 100%;
   user-select: none;
+  width: 80px;
+  height: 80px;
+  margin-left: 255px;
+  border: 2px solid #ffee00;
 }
 
 .navbar-brand-img:hover {
@@ -36,7 +40,7 @@ html {
   border-radius: 100%;
   margin-right: 1em !important;
   user-select: none;
-  background: #5bf210;
+  background: #10f21b;
   border: 3px solid #ffee00;
   width: 70px;
   height: 70px;
@@ -114,9 +118,14 @@ html {
   user-select: none;
 }
 
+p, ul {
+  font-weight: 600;
+}
+
 a,
 a.navbar {
   user-select: none;
+  font-weight: bold;
 }
 
 .description a {
@@ -128,6 +137,7 @@ a.navbar {
   text-decoration: none;
   width: 90px;
   height: 90px;
+  font-weight: 900;
 }
 
 .description a:hover {

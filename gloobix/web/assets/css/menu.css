@@ -2763,6 +2763,7 @@ spectate-button {
   border-color: #1400c8;
   width: 80px;
   height: 40px;
+  font-weight: bold;
 }
 
 #spectateButton {
@@ -2771,6 +2772,7 @@ spectate-button {
   border-color: #c800b7;
   width: 80px;
   height: 40px;
+  font-weight: bold;
 }
 
 #settingsButto {
@@ -2779,6 +2781,7 @@ spectate-button {
   border-color: #c80000;
   width: 80px;
   height: 40px;
+  font-weight: bold;
 }
 
 .main_play_span {
