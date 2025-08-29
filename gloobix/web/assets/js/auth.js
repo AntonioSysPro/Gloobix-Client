@@ -45,7 +45,7 @@ window.addEventListener( 'DOMContentLoaded', () =>
     const discordLoginBtn = document.getElementById( 'gloobix_account_login_button' );
     const logoutBtn = document.getElementById( 'gloobixUserLogout' ) || document.getElementById( 'logout-btn' );
     const playerName = document.getElementById( 'gloobixAccountUsername' ) || document.getElementById( 'player-name' );
-    const playerAvatar = document.getElementById( 'userAvatar' ) || '../img/favicon.png';
+    const playerAvatar = document.getElementById( 'userAvatar' ) || '../img/favicon.ico';
     const profileBtn = document.getElementById( 'profile-btn' );
     const profilePanel = document.getElementById( 'profile-panel' );
     const userCoinsElem = document.getElementById( 'usercoins_amount' );
@@ -218,7 +218,7 @@ window.addEventListener( 'DOMContentLoaded', () =>
             {
                 console.info( 'auth.onAuthStateChanged: logged in', user.uid );
                 if ( playerName ) playerName.textContent = user.displayName || '';
-                if ( playerAvatar ) { playerAvatar.src = /*user.photoURL ||*/ '../img/favicon.png'; playerAvatar.style.display = 'inline'; }
+                if ( playerAvatar ) { playerAvatar.src = /*user.photoURL ||*/ '../img/favicon.ico'; playerAvatar.style.display = 'inline'; }
                 // Ocultar todos los botones de login y mostrar solo logout
                 if ( googleLoginBtn ) googleLoginBtn.style.display = 'none';
                 if ( discordLoginBtn ) discordLoginBtn.style.display = 'none';
@@ -287,7 +287,7 @@ window.addEventListener( 'DOMContentLoaded', () =>
             {
                 console.info( 'auth.onAuthStateChanged: no user' );
                 if ( playerName ) playerName.textContent = '';
-                if ( playerAvatar ) { playerAvatar.src = '../img/favicon.png'; playerAvatar.style.display = 'none'; }
+                if ( playerAvatar ) { playerAvatar.src = '../img/favicon.ico'; playerAvatar.style.display = 'none'; }
                 // Mostrar botones de login y ocultar logout
                 if ( googleLoginBtn ) googleLoginBtn.style.display = 'block';
                 if ( discordLoginBtn ) discordLoginBtn.style.display = 'block';

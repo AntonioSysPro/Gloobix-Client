@@ -47,7 +47,7 @@ $( window ).on( "mousemove click", function ( e )
     -100,
     Math.min( 100, $( window ).height() / 2 - e.clientY )
   );
-  lFollowX = ( 20 * lMouseX ) / 100;
-  lFollowY = ( 10 * lMouseY ) / 100;
+  lFollowX = ( 30 * lMouseX ) / 100;
+  lFollowY = ( 20 * lMouseY ) / 100;
 } );
 setInterval( moveBackground, 20 );

@@ -2783,13 +2783,13 @@ function init ()
       nameElem.textContent = user.displayName || user.email || 'Usuario';
       const imavatar = '';
       if ( user.photoURL ) { imavatar = user.photoURL }
-      else { './assets/img/favicon.png' }
+      else { './assets/img/favicon.ico' }
       avatarElem.src = imavatar;
       avatarElem.style.display = 'inline';
     } else if ( nameElem && avatarElem )
     {
       nameElem.textContent = '';
-      avatarElem.src = './assets/img/favicon.png';
+      avatarElem.src = './assets/img/favicon.ico';
       avatarElem.style.display = 'none';
     }
   }

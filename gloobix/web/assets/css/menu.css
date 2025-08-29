@@ -192,7 +192,7 @@
 .ads-main {
   width: 290px;
   height: 245px;
-  background-image: url('../img/favicon.png');
+  background-image: url('../img/favicon.ico');
   border: 1px solid black;
   margin-left: 0px;
   border-radius: 20px;
@@ -3360,7 +3360,7 @@ spectate-button {
   transform: translate(-50%, -50%);
   padding: 10px;
   border-radius: 50%;
-  background-image: url("https://gloobix-io.onrender.com/web/assets/img/favicon.png");
+  background-image: url("https://gloobix-io.onrender.com/web/assets/img/favicon.ico");
   background-size: cover;
   background-repeat: no-repeat;
 }
