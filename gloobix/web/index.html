@@ -15,7 +15,7 @@
     <title>GLOOBIX.IO WEB - Juego multijugador tipo Agar.io gratis y online</title>
     <link id="favicon" rel="icon" type="image/png" href="./assets/img/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:700" rel="stylesheet" type="text/css">
-    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="./assets/css/index.css" rel="stylesheet">
     <link href="./assets/css/joystick.css" rel="stylesheet">
     <link href="./assets/css/gallery.css" rel="stylesheet">
@@ -25,7 +25,6 @@
     <link href="./assets/css/recording.css" rel="stylesheet">
     <link href="./assets/css/recordings.css" rel="stylesheet">
     <script src="./js/jquery.min.js"></script>
-
     <script src="./assets/js/quadtree.js"></script>
     <!-- Firebase debe inicializarse antes de cualquier uso -->
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
@@ -50,13 +49,8 @@
         // When set, the client will prefer that list over local config/modes.json
         window.MODES_SERVICE_URL = window.MODES_SERVICE_URL || null;
         window.MODES_SERVICE_KEY = window.MODES_SERVICE_KEY || null;
-
-        // Convenience wrapper: if page code calls setserver('localhost:443') or similar,
-        // remap it to the production Render host. Edit RENDER_SERVER_OVERRIDE to change target.
         ( function ()
         {
-            // Use a full wss URL with the socket path so browsers connect over 443 (wss).
-            // Ensure your game server is reachable at this host and path (TLS enabled).
             const RENDER_SERVER_OVERRIDE = "https:" == window.location.protocol ? 'gloobix-io.onrender.com:443' : 'localhost:443';
             function installWrapper ()
             {
@@ -78,7 +72,6 @@
             if ( !installWrapper() ) document.addEventListener( 'DOMContentLoaded', installWrapper );
         } )();
         if ( typeof BlockAdBlock !== typeof undefined )
-
             function cleanSelect ( x )
             {
                 document.getElementById( "selectedGamemode1" ).classList.remove( 'selectedGamemode' );
@@ -99,9 +92,6 @@
                     if ( window.gloObix.lastgamemode !== null ) document.getElementById( window.gloObix.lastgamemode ).classList.remove( 'selectedGamemode' );
                 }
             }
-
-        // Replace many inline setserver('localhost:...') onclicks by calling selectModeById
-        // This keeps markup untouched and centralizes connection logic to the modes service.
         document.addEventListener( 'DOMContentLoaded', function ()
         {
             try
@@ -180,56 +170,24 @@
                 console.warn( "Error toggling fullscreen:", e );
             }
         }
-
     </script>
     <script>
         function updateCountdown ()
         {
             const targetDate = new Date( "2025-08-11T20:57:00" );
             const now = new Date();
-
             const diff = targetDate - now;
-
             if ( diff <= 0 )
             {
                 document.getElementById( "seasonal_gamemode_countdown" ).textContent = "Season ended.";
                 return;
             }
-
             const days = Math.floor( diff / ( 1000 * 60 * 60 * 24 ) );
             const hours = Math.floor( ( diff / ( 1000 * 60 * 60 ) ) % 24 );
 
             document.getElementById( "seasonal_gamemode_countdown" ).textContent =
                 `⌛${ days }d ${ hours }h`;
         }
-        /*document.ready( function ()
-        {
-            updateCountdown()
-            var d = new Date();
-            var n = d.getDate();
-            var completedAlready = localStorage.getItem( 'questsProgress' );
-            if ( !localStorage.getItem( 'questsProgress' ) ) return localStorage.setItem( 'questsProgress', JSON.stringify( [ 0 ] ) );
-            completedAlready = JSON.parse( completedAlready );
-
-            for ( var i = 1; i <= n; i++ )
-            {
-                $( '.day-' + i ).addClass( 'flip' );
-            }
-
-            for ( let index = 0, len = completedAlready.length; index < len; ++index )
-            {
-                const element = completedAlready[ index ];
-                // console.log(element)
-                $( '.front-' + element ).addClass( 'UnlockedYet' );
-                // console.log('.front-' + element)
-                $( '.day-' + element ).removeClass( 'flip' );
-            }
-
-            for ( var i = n + 1; i <= 24; i++ )
-            {
-                $( '.front-' + i ).addClass( 'notUnlockedYet' );
-            }
-        } );*/
     </script>
 
     <script>
@@ -240,7 +198,6 @@
         aiptag.cmd = aiptag.cmd || [];
         aiptag.cmd.display = aiptag.cmd.display || [];
         aiptag.cmd.player = aiptag.cmd.player || [];
-
         //CMP tool settings
         aiptag.cmp = {
             show: true,
@@ -252,9 +209,7 @@
     </script>
 </head>
 
-<body onload="updateCurrentSkinDisplay()">
-
-
+<body class="fade-enter-active" onload="updateCurrentSkinDisplay()">
     <canvas id="canvas" class="chat-style"></canvas>
     <input type="text" id="chat_textbox" placeholder="Press enter to chat" maxlength="50">
     <div style="font-family:'Ubuntu'">&nbsp;</div>
@@ -275,11 +230,6 @@
             setserver( "https:" == window.location.protocol ? 'gloobix-ffa.onrender.com:443' : 'localhost:443' );
         } );
     </script>
-
-
-
-
-
     <div id="gallery" onclick="if (event.target == this) this.hide()" style="display: none;">
         <div id="gallery-content">
             <div id="gallery-header">Free Skins - Gallery</div>
@@ -295,7 +245,6 @@
             <div id="gallery-yt-body"></div>
         </div>
     </div>
-
     <div id="settings-window" onclick="if (event.target == this) this.hide()"
         style="transition: opacity 0.5s ease 0s; opacity: 0; display: none">
         <div id="settings-window-content">
@@ -510,9 +459,6 @@
             </div>
         </div>
     </div>
-
-
-
     <div id="overlays"
         style="
         transition: opacity 0.5s ease 0s;

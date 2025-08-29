@@ -33,8 +33,6 @@ function moveBackground ()
     "-moz-transform": translate,
     transform: translate,
   } );
-
-  //window.requestAnimationFrame(moveBackground);
 }
 
 $( window ).on( "mousemove click", function ( e )

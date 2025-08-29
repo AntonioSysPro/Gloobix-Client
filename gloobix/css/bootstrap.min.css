@@ -4835,6 +4835,17 @@ fieldset:disabled .btn {
   color: #fff;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-enter-active, .fade-leave-active {
+    animation: fadeIn 2s;
+}
+
+
+
 .card {
   position: relative;
   display: flex;
