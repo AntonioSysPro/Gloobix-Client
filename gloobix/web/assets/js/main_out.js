@@ -286,10 +286,11 @@ var log = {
 
 const LANG_URL = './assets/lang/';
 const lang = {};
-
+const wl = window.location
+console.log(window.location)
 var wsUrl = null,
-  SKIN_URL = "./assets/skins/",
-  YTSKIN_URL = "./assets/youtuberskins/",
+  SKIN_URL = wl.protocol=="https:"? wl.origin+"/web/assets/skins/" : wl.origin+"/gloobix/web/assets/skins/",
+  YTSKIN_URL = wl.protocol=="https:"? wl.origin+"/web/assets/youtuberskins/" : wl.origin+"/gloobix/web/assets/youtuberskins/",
   USE_HTTPS = "https:" == window.location.protocol,
   EMPTY_NAME = "Don't kill me!",
   EMPTY_SKIN = 'no.png'
@@ -580,7 +581,7 @@ function wsMessage ( data )
       {
         wsSend( UINT8_CACHE[ 254 ] );
         stats.pingLoopStamp = Date.now();
-      }, 1000 );
+      }, 1200 );
       break;
     case 0x63: // chat message
       var flags = reader.getUint8();
@@ -984,7 +985,7 @@ function buildGallery ()
   {
     var name = sortedKeys[ i ];
     c += '<li class="skin" onclick="changeSkin(\'' + name + "')\">";
-    c += '<img class="circular" src="assets/skins/' + name + '.png">';
+    c += '<img class="circular" src="./assets/skins/' + name + '.png">';
     c += '<h4 class="skinName">' + name + "</h4>";
     c += "</li>";
   }
@@ -1015,12 +1016,29 @@ function showYoutuberSkins ()
   for ( var i = 0; i < sortedKeys.length; i++ )
   {
     var name = sortedKeys[ i ];
-    c += `<li class="skin" onclick="changeSkin('${ name }')">`;
-    c += `<img class="circular" src="/assets/skins/${ name }.png">`;
-    c += `<h4 class="skinName">${ name }</h4>`;
-    c += '</li>';
+    c += '<li class="skin" onclick="changeSkin(\'' + name + "')\">";
+    c += '<img class="circular" src="./assets/skins/' + name + '.png">';
+    c += '<h4 class="skinName">' + name + "</h4>";
+    c += "</li>";
   }
-  byId( "gallery-yt-body" ).innerHTML = '<ul id="skinsUL">' + c + "</ul>";
+  var galleryBodyEl = byId( "gallery-yt-body" );
+  if ( galleryBodyEl )
+  {
+    galleryBodyEl.innerHTML = '<ul id="skinsUL">' + c + "</ul>";
+  } else
+  {
+    // Si el contenedor no existe aún, reintentar después de DOMContentLoaded
+    document.addEventListener( 'DOMContentLoaded', function onReady ()
+    {
+      document.removeEventListener( 'DOMContentLoaded', onReady );
+      var el = byId( 'gallery-yt-body' );
+      if ( el ) el.innerHTML = '<ul id="skinsUL">' + c + "</ul>";
+    } );
+  }
+  if ( sortedKeys.length === 0 )
+  {
+    console.warn( '[buildGallery] No hay skins para mostrar en la galería.' );
+  }
 }
 
 function buildSettingsWindow ()

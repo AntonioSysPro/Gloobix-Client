@@ -1,18 +1,27 @@
-.container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    /* Ancho de la página en toda su extensión */
+/* Estilo general para el cuerpo del sitio */
+body {
+    font-family: Arial, sans-serif;
+    background-color: grey
 }
 
-h1 {
-    text-align: center;
-    font-size: 3rem;
-    color: #4CAF50;
+/* Estilo de la barra de navegación */
+nav {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Estilo del contenido principal */
+main {
+    margin-top: 50px;
+}
+
+h2 {
+    background-color: #757373
 }
 
 p {
-    margin-top: 20px;
-    padding-left: 20px;
+    background-color: rgb(199, 198, 198)
 }

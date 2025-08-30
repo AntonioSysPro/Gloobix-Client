@@ -201,11 +201,11 @@
 }
 
 .circular:hover {
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 12px rgba(0, 255, 106, 0.8);
 }
 
 .circular:hover+.skinName {
-  text-shadow: 0 0 1px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 0 1px rgba(0, 255, 149, 0.8);
 }
 
 .youtuberSkinsBtn-gallery {
