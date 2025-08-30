@@ -72,7 +72,7 @@ html {
 .bg {
   height: 100%;
   width: 100%;
-  background-image: url("../bg.png");
+  background-image: url("https://gloobix-io.onrender.com/bg.png");
   background-size: cover;
   background-position: center;
   position: absolute;
