@@ -58,3 +58,18 @@ footer {
     padding: 1em;
     clear: both;
 }
+
+/* Estilos para las secciones de FAQ, Troubleshooting y Contacto */
+section#faq h2,
+section#troubleshooting h2,
+section#contact h1 {
+    margin-top: 0;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #ddd;
+}
+
+section#faq p,
+section#troubleshooting p,
+section#contact p {
+    line-height: 1.6;
+}
