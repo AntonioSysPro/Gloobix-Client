@@ -797,7 +797,7 @@ var settings = {
   backgroundSectors: false,
   jellyPhysics: true,
   animationDelay: 165,
-  drawNamesDistance: 20000,
+  drawNamesDistance: 20000*20000*2000000,
 };
 var pressed = {
   " ": false,
