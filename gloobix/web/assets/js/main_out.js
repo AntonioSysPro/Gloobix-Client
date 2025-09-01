@@ -1957,23 +1957,35 @@ Cell.prototype = {
       this.s += ctx.lineWidth / 2;
     }
   },
-  drawText: function ( ctx )
+  drawText: function ( ctx, biggestMineCellId )
   {
     if ( this.s < 20 || this.jagged ) return;
     var y = this.y;
     let range = settings.drawNamesDistance//document.getElementById( 'drawNamesDistance' ).value || 1; // how far to zoom out from the cell before hiding names and mass
     if ( this.name && settings.showNames && this.viewRange < range )
     {
-      drawText(
-        ctx,
-        false,
-        this.x,
-        this.y,
-        this.nameSize,
-        this.drawNameSize,
-        this.name
-      );
-      y += Math.max( this.s / 4.5, this.nameSize / 1.5 );
+      // Si la célula pertenece al jugador y el jugador está dividido en varias células,
+      // solo mostrar el nombre en la célula más grande (biggestMineCellId).
+      var isMine = cells.mine.indexOf( this.id ) !== -1;
+      var multipleMineCells = cells.mine.length > 1;
+      var shouldDrawName = true;
+      if ( isMine && multipleMineCells )
+      {
+        shouldDrawName = this.id === biggestMineCellId;
+      }
+      if ( shouldDrawName )
+      {
+        drawText(
+          ctx,
+          false,
+          this.x,
+          this.y,
+          this.nameSize,
+          this.drawNameSize,
+          this.name
+        );
+        y += Math.max( this.s / 4.5, this.nameSize / 1.5 );
+      }
     }
     if (
       settings.showMass &&
@@ -1981,16 +1993,28 @@ Cell.prototype = {
       this.viewRange < range
     )
     {
-      var mass = ( ~~( ( this.s * this.s ) / 100 ) ).toString();
-      drawText(
-        ctx,
-        true,
-        this.x,
-        y,
-        this.nameSize / 2,
-        this.drawNameSize / 2,
-        mass
-      );
+      // Mismo comportamiento que los nombres: si el jugador está dividido,
+      // mostrar la masa solo en la célula más grande.
+      var isMine = cells.mine.indexOf( this.id ) !== -1;
+      var multipleMineCells = cells.mine.length > 1;
+      var shouldDrawMass = true;
+      if ( isMine && multipleMineCells )
+      {
+        shouldDrawMass = this.id === biggestMineCellId;
+      }
+      if ( shouldDrawMass )
+      {
+        var mass = ( ~~( ( this.s * this.s ) / 100 ) ).toString();
+        drawText(
+          ctx,
+          true,
+          this.x,
+          y,
+          this.nameSize / 2,
+          this.drawNameSize / 2,
+          mass
+        );
+      }
     }
   },
 };
