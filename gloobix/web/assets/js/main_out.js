@@ -1,6 +1,5 @@
 //(function() {
 //"use strict";
-
 if (
   typeof WebSocket === "undefined" ||
   typeof DataView === "undefined" ||
@@ -284,13 +283,13 @@ var log = {
   },
 };
 
-const LANG_URL = './assets/lang/';
-const lang = {};
-const wl = window.location
-console.log(window.location)
+var fontes = './fonts/BAUHS93.ttf';
+const LANG_URL = './assets/lang/',
+  lang = {},
+  wl = window.location
 var wsUrl = null,
-  SKIN_URL = wl.protocol=="https:"? wl.origin+"/web/assets/skins/" : wl.origin+"/gloobix/web/assets/skins/",
-  YTSKIN_URL = wl.protocol=="https:"? wl.origin+"/web/assets/youtuberskins/" : wl.origin+"/gloobix/web/assets/youtuberskins/",
+  SKIN_URL = wl.protocol == "https:" ? wl.origin + "/web/assets/skins/" : wl.origin + "/gloobix/web/assets/skins/",
+  YTSKIN_URL = wl.protocol == "https:" ? wl.origin + "/web/assets/youtuberskins/" : wl.origin + "/gloobix/web/assets/youtuberskins/",
   USE_HTTPS = "https:" == window.location.protocol,
   EMPTY_NAME = "Don't kill me!",
   EMPTY_SKIN = 'no.png'
@@ -581,7 +580,7 @@ function wsMessage ( data )
       {
         wsSend( UINT8_CACHE[ 254 ] );
         stats.pingLoopStamp = Date.now();
-      }, 1200 );
+      }, 2000 );
       break;
     case 0x63: // chat message
       var flags = reader.getUint8();
@@ -797,7 +796,7 @@ var settings = {
   backgroundSectors: false,
   jellyPhysics: true,
   animationDelay: 165,
-  drawNamesDistance: 20000*20000*2000000,
+  drawNamesDistance: 20000 * 20000 * 2000000,
 };
 var pressed = {
   " ": false,
@@ -823,15 +822,15 @@ request( "./assets/txt-Skins/skinList.txt", function ( data )
     return;
   }
 
-  var skins = data.toUpperCase().split( "," );
+  var skins = data.split( "," );
   var sortedSkins = [];
 
   // Ordena las skins alfabéticamente
   for ( var i = 0; i < skins.length; i++ )
   {
-    if ( !sortedSkins.includes( skins[ i ].toUpperCase() ) )
+    if ( !sortedSkins.includes( skins[ i ] ) )
     {
-      sortedSkins.push( skins[ i ].toUpperCase() );
+      sortedSkins.push( skins[ i ] );
     }
   }
 
@@ -863,7 +862,7 @@ request(
     var stamp = Date.now();
     for ( var i = 0; i < skins.length; i++ )
     {
-      skins[ i ] = skins[ i ].toUpperCase(); // Convertir a mayúsculas
+      skins[ i ] = skins[ i ]; // Convertir a mayúsculas
     }
     skins.sort(); // Ordenar alfabéticamente
   }
@@ -984,10 +983,13 @@ function buildGallery ()
   for ( var i = 0; i < sortedKeys.length; i++ )
   {
     var name = sortedKeys[ i ];
-    c += '<li class="skin" onclick="changeSkin(\'' + name + "')\">";
-    c += '<img class="circular" src="./assets/skins/' + name + '.png">';
-    c += '<h4 class="skinName">' + name + "</h4>";
-    c += "</li>";
+    if ( name.indexOf( 'Powerup' ) && name.indexOf( 'Minion' ) )
+    {
+      c += '<li class="skin" onclick="changeSkin(\'' + name + "')\">";
+      c += '<img class="circular" src="./assets/skins/' + name + '.png">';
+      c += '<h4 class="skinName">' + name + "</h4>";
+      c += "</li>";
+    }
   }
   var galleryBodyEl = byId( "gallery-body" );
   if ( galleryBodyEl )
@@ -1046,55 +1048,7 @@ function buildSettingsWindow ()
   // byId("settings-window").innerHTML = '<label class="control control-checkbox">Show skins<input id="showSkins" type="checkbox" /><div class="control_indicator"></div></label>';
 }
 
-function drawChat ()
-{
-  if ( chat.messages.length === 0 && settings.showChat )
-    return ( chat.visible = false );
-  chat.visible = true;
-  var canvas = chat.canvas;
-  var ctx = canvas.getContext( "2d" );
-  var latestMessages = chat.messages.slice( -15 );
-  var lines = [];
-  for ( var i = 0, len = latestMessages.length; i < len; i++ )
-    lines.push( [
-      {
-        text: latestMessages[ i ].name,
-        color: latestMessages[ i ].color,
-      },
-      {
-        text: " " + latestMessages[ i ].message,
-        color: settings.darkTheme ? "#FFF" : "#000",
-      },
-    ] );
-  var width = 0;
-  var height = 500;
-  for ( var i = 0; i < len; i++ )
-  {
-    var thisLineWidth = 0;
-    var complexes = lines[ i ];
-    for ( var j = 0; j < complexes.length; j++ )
-    {
-      ctx.font = "26px Ubuntu";
-      complexes[ j ].width = ctx.measureText( complexes[ j ].text ).width;
-      thisLineWidth += complexes[ j ].width;
-    }
-    width = Math.max( thisLineWidth, width );
-  }
-  canvas.width = width;
-  canvas.height = height;
-  for ( var i = 0; i < len; i++ )
-  {
-    width = 0;
-    var complexes = lines[ i ];
-    for ( var j = 0; j < complexes.length; j++ )
-    {
-      ctx.font = "26px Ubuntu";
-      ctx.fillStyle = complexes[ j ].color;
-      ctx.fillText( complexes[ j ].text, width, 20 * ( 1 + i ) );
-      width += complexes[ j ].width;
-    }
-  }
-}
+
 
 /*function drawStats ()
 {
@@ -1443,7 +1397,7 @@ function drawBorders ()
 {
   if ( !settings.showBorder ) return;
   mainCtx.strokeStyle = "#0000ff";
-  mainCtx.lineWidth = 10;
+  mainCtx.lineWidth = 0;
   mainCtx.lineCap = "round";
   mainCtx.lineJoin = "round";
   mainCtx.beginPath();
@@ -1528,15 +1482,15 @@ function drawGame ()
     mainCtx.fillText( "Score: " + stats.score, 20, height );
     height += 30;
   } mainCtx.font = '30px Ubuntu';
-  const sping = settings.showPing ? ( isNaN( stats.latency ) ? '' : ` ${ 'ping:' }${ stats.latency }` ) : "";
-  const gameStatsText = settings.showFPS ? `${ 'fps:' } ${ ~~stats.fps }` + sping : sping;
+  const sping = settings.showPing ? ( isNaN( stats.latency ) ? '' : ` ${ 'ping:' }${ stats.latency }` ) : "",
+    gameStatsText = settings.showFPS ? `${ 'fps:' } ${ ~~stats.fps }` + sping : sping;
 
   if ( !stats.info ? stats.visible = false : stats.visible = true )
   {
-    const modeStat = `Gamemode: (${ stats.info.mode })`;
-    const totalPlaStats = `${ 'players:' } ${ ~~stats.info.playersTotal } / ${ stats.info.playersLimit }`;
-    const PlayingStat = `${ 'playing:' } ${ ~~stats.info.playersAlive }`;
-    const spectatinStat = `${ 'spectating:' } ${ ~~stats.info.playersSpect }`;
+    const modeStat = `Gamemode: (${ stats.info.mode })`,
+      totalPlaStats = `${ 'players:' } ${ ~~stats.info.playersTotal } / ${ stats.info.playersLimit }`,
+      PlayingStat = `${ 'playing:' } ${ ~~stats.info.playersAlive }`,
+      spectatinStat = `${ 'spectating:' } ${ ~~stats.info.playersSpect }`;
     if ( gameStatsText )
     {
       mainCtx.fillText( gameStatsText, 20, height );
@@ -1961,8 +1915,8 @@ Cell.prototype = {
   {
     if ( this.s < 20 || this.jagged ) return;
     var y = this.y;
-    let range = settings.drawNamesDistance//document.getElementById( 'drawNamesDistance' ).value || 1; // how far to zoom out from the cell before hiding names and mass
-    if ( this.name && settings.showNames && this.viewRange < range )
+    let range = 350//settings.drawNamesDistance//document.getElementById( 'drawNamesDistance' ).value || 1; // how far to zoom out from the cell before hiding names and mass
+    if ( this.name && settings.showNames && this.viewRange > range )
     {
       // Si la célula pertenece al jugador y el jugador está dividido en varias células,
       // solo mostrar el nombre en la célula más grande (biggestMineCellId).
@@ -1990,7 +1944,7 @@ Cell.prototype = {
     if (
       settings.showMass &&
       ( cells.mine.indexOf( this.id ) !== -1 || cells.mine.length === 0 ) &&
-      this.viewRange < range
+      this.viewRange > range
     )
     {
       // Mismo comportamiento que los nombres: si el jugador está dividido,
@@ -2806,10 +2760,10 @@ function init ()
   function updateXPBar ( xp, maxXP, level )
   {
     // Actualizar todos los elementos que puedan compartir estos IDs (por si hay duplicados en el HTML)
-    const xpBars = document.querySelectorAll( '#xpProgressBar' );
-    const levelSpans = document.querySelectorAll( '#level' );
-    const displayLevels = document.querySelectorAll( '#displayLevel' );
-    const percent = Math.floor( ( xp / maxXP ) * 100 );
+    const xpBars = document.querySelectorAll( '#xpProgressBar' ),
+      levelSpans = document.querySelectorAll( '#level' ),
+      displayLevels = document.querySelectorAll( '#displayLevel' ),
+      percent = Math.floor( ( xp / maxXP ) * 100 );
     console.debug( 'main_out.js: updateXPBar called', { xp, maxXP, level, percent, xpBars: xpBars.length, levelSpans: levelSpans.length, displayLevels: displayLevels.length } );
     xpBars.forEach( function ( el ) { try { el.style.width = percent + '%'; } catch ( e ) { } } );
     levelSpans.forEach( function ( el ) { try { el.textContent = level; } catch ( e ) { } } );
@@ -2818,8 +2772,8 @@ function init ()
 
   function updateUserUI ( user )
   {
-    const nameElem = byId( 'gloobixAccountUsername' );
-    const avatarElem = byId( 'userAvatar' );
+    const nameElem = byId( 'gloobixAccountUsername' ),
+      avatarElem = byId( 'userAvatar' );
     if ( user && nameElem && avatarElem && user.photoURL )
     {
       nameElem.textContent = user.displayName || user.email || 'Usuario';
@@ -3114,10 +3068,10 @@ function init ()
     camera.viewportScale = Math.max( width / 1920, height / 1080 );
   };
   window.onresize();
-  const mobileStuff = byId( 'mobileStuff' );
-  const joystick = byId( 'joystick' );
-  const joystickHandle = byId( 'joystick-handle' );
-  const touchCircle = byId( 'touchCircle' );
+  const mobileStuff = byId( 'mobileStuff' ),
+    joystick = byId( 'joystick' ),
+    joystickHandle = byId( 'joystick-handle' ),
+    touchCircle = byId( 'touchCircle' );
   let joystickActive = false;
   let joystickStartX = 0;
   let joystickStartY = 0;
@@ -3131,10 +3085,10 @@ function init ()
     const touch = event.touches[ 0 ];
     if ( joystickActive )
     {
-      const dx = touch.clientX - joystickStartX;
-      const dy = touch.clientY - joystickStartY;
-      const distance = Math.sqrt( dx * dx + dy * dy );
-      const maxDistance = joystick.offsetWidth / 2;
+      const dx = touch.clientX - joystickStartX,
+        dy = touch.clientY - joystickStartY,
+        distance = Math.sqrt( dx * dx + dy * dy ),
+        maxDistance = joystick.offsetWidth / 2;
 
       let newX = handleStartX + dx;
       let newY = handleStartY + dy;
@@ -3148,8 +3102,8 @@ function init ()
       joystickHandle.style.left = `${ newX }px`;
       joystickHandle.style.top = `${ newY }px`;
 
-      const moveX = ( newX - handleStartX ) / maxDistance;
-      const moveY = ( newY - handleStartY ) / maxDistance;
+      const moveX = ( newX - handleStartX ) / maxDistance,
+        moveY = ( newY - handleStartY ) / maxDistance;
 
       mouseX = innerWidth / 2 + moveX * ( innerWidth / 2 );
       mouseY = innerHeight / 2 + moveY * ( innerHeight / 2 );
@@ -3295,10 +3249,60 @@ function clloseStarterPack ()
   byId( "starterPakFooter" ).hide( 0.5 );
 }
 
+function drawChat ()
+{
+  if ( chat.messages.length === 0 && settings.showChat )
+    return ( chat.visible = false );
+  chat.visible = true;
+  var canvas = chat.canvas;
+  var ctx = canvas.getContext( "2d" );
+  var latestMessages = chat.messages.slice( -8 );
+  var lines = [];
+  for ( var i = 0, len = latestMessages.length; i < len; i++ )
+    lines.push( [
+      {
+        text: latestMessages[ i ].name,
+        color: latestMessages[ i ].color,
+      },
+      {
+        text: " " + latestMessages[ i ].message,
+        color: settings.darkTheme ? "#FFF" : "#000",
+      },
+    ] );
+  var width = 0;
+  var height = 500;
+  for ( var i = 0; i < len; i++ )
+  {
+    var thisLineWidth = 0;
+    var complexes = lines[ i ];
+    for ( var j = 0; j < complexes.length; j++ )
+    {
+      ctx.font = "26px Ubuntu";
+      complexes[ j ].width = ctx.measureText( complexes[ j ].text ).width;
+      thisLineWidth += complexes[ j ].width;
+    }
+    width = Math.max( thisLineWidth, width );
+  }
+  canvas.width = width;
+  canvas.height = height;
+  for ( var i = 0; i < len; i++ )
+  {
+    width = 0;
+    var complexes = lines[ i ];
+    for ( var j = 0; j < complexes.length; j++ )
+    {
+      ctx.font = "26px Ubuntu";
+      ctx.fillStyle = complexes[ j ].color;
+      ctx.fillText( complexes[ j ].text, width, 20 * ( 1 + i ) );
+      width += complexes[ j ].width;
+    }
+  }
+}
+
 function skincamb ()
 {
-  const currentSkinImg = document.getElementById( "currentSkin" );
-  const currentSkinNameSpan = document.getElementById( "currentSkinName" );
+  const currentSkinImg = document.getElementById( "currentSkin" ),
+    currentSkinNameSpan = document.getElementById( "currentSkinName" );
 
   if ( settings.skin )
   {
@@ -3313,8 +3317,8 @@ function skincamb ()
 
 function updateCurrentSkinDisplay ()
 {
-  const currentSkinImg = document.getElementById( "currentSkin" );
-  const currentSkinNameSpan = document.getElementById( "currentSkinName" );
+  const currentSkinImg = document.getElementById( "currentSkin" ),
+    currentSkinNameSpan = document.getElementById( "currentSkinName" );
 
   if ( settings.skin )
   {

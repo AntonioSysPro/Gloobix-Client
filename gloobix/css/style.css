@@ -69,10 +69,9 @@ html {
   background: #f210c1;
 }
 
-.bg {
+.bg, #imagi {
   height: 100%;
   width: 100%;
-  background-image: url("https://gloobix-io.onrender.com/bg.png");
   background-size: cover;
   background-position: center;
   position: absolute;

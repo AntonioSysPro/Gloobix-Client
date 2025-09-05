@@ -5,7 +5,7 @@
     "path": "/",
     "wsPath": "/socket",
     "hintPort": 443,
-    "url": "wss://gloobix-ffa.onrender.com:443"
+    "url": "ws://localhost:443"
   },
   {
     "id": "teams",

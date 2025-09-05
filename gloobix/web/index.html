@@ -26,6 +26,7 @@
     <link href="./assets/css/recordings.css" rel="stylesheet">
     <script src="./js/jquery.min.js"></script>
     <script src="./assets/js/quadtree.js"></script>
+    <script src="./assets/js/updateSkinList.js"></script>
     <!-- Firebase debe inicializarse antes de cualquier uso -->
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
@@ -41,7 +42,7 @@
     <script src="./assets/js/gamechat.js"></script>
     <script src="./assets/js/initial_setup.js"></script>
     <script src="./assets/js/modes-client.js"></script>
-    <script>
+    <!--<script>
         // Optional: point this to a remote modes service (JSON array) hosted on Render.
         // Example: window.MODES_SERVICE_URL = 'https://my-render-service.onrender.com/modes'
         // Optionally provide a MODE API KEY for protected endpoints:
@@ -128,7 +129,7 @@
         {
             console.log( 'No event scheduled' );
         }
-    </script>
+    </script>-->
     <script>
         function toggleFullScreen ()
         {
@@ -227,7 +228,8 @@
                 canvas.height = window.innerHeight;
             } );
             // legacy: set default server host:port used by the game logic
-            setserver( "https:" == window.location.protocol ? 'gloobix-ffa.onrender.com:443' : 'localhost:443' );
+            //setserver( "https:" == window.location.protocol ? 'gloobix-ffa.onrender.com:443' : 'localhost:443' );
+            window.selectModeById('ffa');
         } );
     </script>
     <div id="gallery" onclick="if (event.target == this) this.hide()" style="display: none;">

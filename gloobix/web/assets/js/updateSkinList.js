@@ -10,5 +10,4 @@ if ( folderContents.length !== pngFileNames.length )
   console.warn( "Warning: found " + nonPngFileNames.length + " non-PNG skins, these will not be loaded! (" + nonPngFileNames.join( "," ) + ")" );
 }
 
-fs.writeFileSync( "../txt Skins/skinList.txt", pngFileNames.map( f => f.slice( 0, -4 ) ).join() );
-fs.writeFileSync( "../src/txt/skinList.txt", pngFileNames.map( f => f.slice( 0, -4 ) ).join() );
+fs.writeFileSync( "./gloobix/web/assets/txt-Skins/skinList.txt", pngFileNames.map( f => f.slice( 0, -4 ) ).join() );

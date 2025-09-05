@@ -2,7 +2,7 @@
 function skinHandler ()
 {
     let inputValue = document.getElementById( 'skin' ).value;
-    const baseUrl = window.location.origin + '.assets/skins/';
+    const baseUrl = window.location.origin + './assets/skins/';
 
     function validateSkin ()
     {

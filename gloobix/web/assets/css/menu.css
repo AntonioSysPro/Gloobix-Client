@@ -3600,7 +3600,7 @@ input#partyFriendAdd {
 }
 
 .potionSpan {
-  font-family: 'Ubuntu';
+  font: url(../../../fonts/BAUHS93.ttf);
   text-align: center;
   display: block;
   font-weight: bold;

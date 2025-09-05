@@ -97,6 +97,8 @@
     fetch( './config/modes.json' ).then( r => r.json() ).then( modes =>
     {
       const m = modes.find( x => x.id === id );
+      const laUrl = m.url
+      console.log(laUrl)
       if ( m ) selectMode( m );
     } ).catch( () => console.warn( 'modes.json no disponible' ) );
   };

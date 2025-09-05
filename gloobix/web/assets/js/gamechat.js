@@ -85,55 +85,54 @@ function loadChat ()
     }
 
     function drawChat ()
+{
+  if ( chat.messages.length === 0 && settings.showChat )
+    return ( chat.visible = false );
+  chat.visible = true;
+  var canvas = chat.canvas;
+  var ctx = canvas.getContext( "2d" );
+  var latestMessages = chat.messages.slice( -8 );
+  var lines = [];
+  for ( var i = 0, len = latestMessages.length; i < len; i++ )
+    lines.push( [
+      {
+        text: latestMessages[ i ].name,
+        color: latestMessages[ i ].color,
+      },
+      {
+        text: " " + latestMessages[ i ].message,
+        color: settings.darkTheme ? "#FFF" : "#000",
+      },
+    ] );
+  var width = 0;
+  var height = 500;
+  for ( var i = 0; i < len; i++ )
+  {
+    var thisLineWidth = 0;
+    var complexes = lines[ i ];
+    for ( var j = 0; j < complexes.length; j++ )
     {
-        let yOffset = chatZone.y + chatZone.height;
-
-        for ( let i = chatMessages.length - 1; i >= 0; i-- )
-        {
-            let msg = chatMessages[ i ];
-            yOffset -= msg.height + 10;
-            msg.y = yOffset; // Update y position for click detection
-
-            // Erase previous text by drawing a semi-transparent rectangle over it
-            ctx.fillStyle = "rgba(0, 0, 0, 0.0)"; // Fully transparent
-            ctx.fillRect( chatZone.x, yOffset, chatZone.width, msg.height );
-
-            // Draw chat message with transparency
-            if ( msg.messageType == "FRIEND" ) ctx.fillStyle = "rgba(255, 255, 0, 0.7)";
-            else if ( msg.messageType == "SERVER" ) ctx.fillStyle = "rgba(8, 45, 255, 0.7)";
-            else if ( msg.messageType == "ADMIN" ) ctx.fillStyle = "rgba(255, 44, 44, 0.7)";
-            else ctx.fillStyle = "rgba(156, 156, 156, 0.7)";
-            drawRoundedRect( ctx, chatZone.x, yOffset, chatZone.width - 20, msg.height, 5 );
-
-            // Draw close ("X") button background (red circle)
-            let xButtonX = chatZone.x + chatZone.width - 35;
-            let xButtonY = yOffset - 5;
-            ctx.fillStyle = "rgba(180, 0, 0, 0.8)";
-            ctx.beginPath();
-            ctx.arc( xButtonX + 8, xButtonY + 8, 8, 0, Math.PI * 2 );
-            ctx.fill();
-
-            // Draw "X" text
-            ctx.fillStyle = "white";
-            ctx.font = "bold 12px Ubuntu";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText( "x", xButtonX + 8, xButtonY + 8 );
-
-            // Draw message text
-            ctx.fillStyle = "white";
-            ctx.font = "16px Ubuntu";
-            ctx.textAlign = "left";
-            ctx.textBaseline = "alphabetic";
-
-            let textY = yOffset + 24;
-            for ( let line of msg.text )
-            {
-                ctx.fillText( line, chatZone.x + 10, textY );
-                textY += 18;
-            }
-        }
+      ctx.font = "26px Ubuntu";
+      complexes[ j ].width = ctx.measureText( complexes[ j ].text ).width;
+      thisLineWidth += complexes[ j ].width;
     }
+    width = Math.max( thisLineWidth, width );
+  }
+  canvas.width = width;
+  canvas.height = height;
+  for ( var i = 0; i < len; i++ )
+  {
+    width = 0;
+    var complexes = lines[ i ];
+    for ( var j = 0; j < complexes.length; j++ )
+    {
+      ctx.font = "26px Ubuntu";
+      ctx.fillStyle = complexes[ j ].color;
+      ctx.fillText( complexes[ j ].text, width, 20 * ( 1 + i ) );
+      width += complexes[ j ].width;
+    }
+  }
+}
 
     function drawRoundedRect ( ctx, x, y, width, height, radius )
     {
