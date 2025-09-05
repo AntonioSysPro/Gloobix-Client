@@ -85,9 +85,21 @@
   {
     const modes = await fetchModes();
     if ( !modes || modes.length === 0 ) return;
-    // buildMenu(modes);
-    // auto select first mode for compatibility
-    // // selectMode(modes[0]);
+
+    const selectedModeId = localStorage.getItem('selectedModeId');
+    if (selectedModeId) {
+      const mode = modes.find(m => m.id === selectedModeId);
+      if (mode) {
+        selectModeById(selectedModeId);
+      } else {
+        console.warn(`Stored mode ID ${selectedModeId} is invalid.`);
+        buildMenu(modes);
+      }
+    } else {
+      buildMenu(modes);
+      // auto select first mode for compatibility
+      // selectMode(modes[0]);
+    }
   }
 
   window.addEventListener( 'DOMContentLoaded', init );
@@ -99,7 +111,25 @@
       const m = modes.find( x => x.id === id );
       const laUrl = m.url
       console.log(laUrl)
-      if ( m ) selectMode( m );
+      if ( m ) {
+        localStorage.setItem('selectedModeId', id);
+        selectMode( m );
+        try { window.cleanSelect(); } catch ( e ) { }
+        const elementId = 'selectedGamemode' + (modes.findIndex(x => x.id === id) + 1);
+        try {
+          const mapping = {
+            'ffa': 'selectedGamemode1',
+            'teams': 'selectedGamemode2',
+            'selfeed': 'selectedGamemode3',
+            'experimental': 'selectedGamemode4',
+            'megasplit': 'selectedGamemode5',
+            'ghost': 'selectedGamemode6',
+            'minions': 'selectedGamemode7',
+            'imvirus': 'selectedGamemode8'
+          };
+          document.getElementById(mapping[id]).classList.add('selectedGamemode');
+        } catch (e) {}
+      }
     } ).catch( () => console.warn( 'modes.json no disponible' ) );
   };
 } )();

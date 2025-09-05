@@ -229,7 +229,7 @@
             } );
             // legacy: set default server host:port used by the game logic
             //setserver( "https:" == window.location.protocol ? 'gloobix-ffa.onrender.com:443' : 'localhost:443' );
-            window.selectModeById('ffa');
+            // window.selectModeById('ffa');
         } );
     </script>
     <div id="gallery" onclick="if (event.target == this) this.hide()" style="display: none;">
@@ -671,7 +671,7 @@
                     <div class="UserContainer-gamemodes">
 
                         <div class="horizontalAlignment">
-                            <div id="selectedGamemode1" class="item selectedGamemode"
+                            <div id="selectedGamemode1" class="item"
                                 onclick="window.selectModeById('ffa'); cleanSelect(); this.classList.add('selectedGamemode')">
                                 <img id="gamemode1" src="./assets/img/ffa.png" class="gamemodeAvatar">
                                 <span class="animated_rainbow_1" style="display: block;padding: 2px;">FFA&nbsp;
