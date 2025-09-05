@@ -96,6 +96,7 @@
         buildMenu(modes);
       }
     } else {
+      window.selectModeById('ffa');
       buildMenu(modes);
       // auto select first mode for compatibility
       // selectMode(modes[0]);
